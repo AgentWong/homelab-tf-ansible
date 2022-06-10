@@ -1,0 +1,42 @@
+- name: Create EDEN Computers
+  community.windows.win_domain_ou:
+    name: EDEN Computers
+    state: present
+  register: init_eden_computers_ou
+
+- name: Create EDEN Users
+  community.windows.win_domain_ou:
+    name: EDEN Users
+    state: present
+  register: init_eden_users_ou
+
+# The second execution is needed because otherwise the variable only contains 'path' value and not 'ou'
+- name: Poll EDEN Computers
+  community.windows.win_domain_ou:
+    name: EDEN Computers
+    state: present
+  register: eden_computers_ou
+
+- name: Poll EDEN Users
+  community.windows.win_domain_ou:
+    name: EDEN Users
+    state: present
+  register: eden_users_ou
+
+- name: Redirect default computers
+  win_shell: "redircmp '{{  eden_computers_ou['ou']['DistinguishedName']  }}'"
+  when: init_eden_computers_ou.changed
+  
+- name: Redirect default users
+  win_shell: "redirusr '{{  eden_users_ou['ou']['DistinguishedName']  }}'"
+  when: init_eden_users_ou.changed
+
+- name: Create new domain admin
+  community.windows.win_domain_user:
+    name: radmin
+    firstname: Remote
+    surname: Administrator
+    password: "{{ domain_admin_password }}"
+    groups: 
+      - Domain Admins
+      - Enterprise Admins

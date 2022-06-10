@@ -1,0 +1,6 @@
+---
+- hosts:
+    - "{{ root_ca_hostname }}"
+    - "{{ sub_ca_hostname }}"
+  roles: 
+  - subordinate_certificate_authority

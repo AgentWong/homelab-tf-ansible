@@ -1,0 +1,41 @@
+---
+
+- name: Create Temp directory if it doesn't exist
+  win_file:
+    path: C:\Temp
+    state: directory
+#- name: Download SQL Server 2019 Express
+#  win_get_url:
+#    url: https://go.microsoft.com/fwlink/p/?linkid=866658
+#    dest: C:\Temp\SQL2019-SSEI-Expr.exe
+- name: Install SQL Server 2019 Express
+  win_package:
+    path: https://go.microsoft.com/fwlink/p/?linkid=866658
+    arguments: 
+      - /ACTION=INSTALL 
+      - /QUIET=True 
+      - /IACCEPTSQLSERVERLICENSETERMS
+- name: Install WSUS Features
+  win_feature:
+    name:
+    - UpdateServices
+    - UpdateServices-Services
+    - UpdateServices-DB
+    state: present
+    include_sub_features: yes
+    include_management_tools: yes
+  register: win_feature
+- name: Reboot if needed
+  win_reboot:
+  when: win_feature.reboot_required
+- name: Name Install WSUS
+  win_package:
+    path: C:\Program Files\Update Services\Tools\wsusutil.exe
+    arguments:
+    - postinstall 
+    - SQL_INSTANCE_NAME="%COMPUTERNAME%\SQLEXPRESS" 
+    - CONTENT_DIR=$WSUSDir
+- name: Install SqlServer PSModule
+  win_psmodule:
+    name: SqlServer
+    state: present

@@ -1,0 +1,21 @@
+- name: Ensure the required NuGet package provider version is installed
+  win_shell: Find-PackageProvider -Name Nuget -ForceBootstrap -IncludeDependencies -Force
+- name: Install PSModules
+  win_psmodule:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - PSDesiredStateConfiguration
+    - ActiveDirectoryCSDsc
+- name: Install AD CS Feature
+  win_feature:
+    name:
+      - ADCS-Cert-Authority
+      - ADCS-Web-Enrollment
+    state: present
+    include_sub_features: yes
+    include_management_tools: yes
+  register: win_feature
+- name: Reboot if needed
+  win_reboot:
+  when: win_feature.reboot_required

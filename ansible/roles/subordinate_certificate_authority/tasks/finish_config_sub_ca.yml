@@ -1,0 +1,37 @@
+---
+- name: Copy Sub CA certificate
+  win_copy:
+    src: "/tmp/{{  sub_hostname  }}_{{  domain  }} Issuing CA.crt"
+    dest: 'C:\Windows\System32\CertSrv\CertEnroll\{{  sub_hostname  }}_{{  domain  }} Issuing CA.crt'
+- name: Register Sub CA Certificate
+  win_shell: 'certutil.exe -installCert "C:\Windows\System32\CertSrv\CertEnroll\{{  sub_hostname  }}_{{  domain  }} Issuing CA.crt"'
+- name: Configure Sub CA settings
+  win_dsc:
+    resource_name: AdcsCertificationAuthoritySettings
+    IsSingleInstance: 'Yes'
+    CACertPublicationURLs:
+      - '1:C:\Windows\system32\CertSrv\CertEnroll\%1_%3%4.crt'
+      - "2:http://pki.{{ domain }}/CertEnroll/%1_%3%4.crt"
+      - "3:ldap:///CN=%7,CN=AIA,CN=Public Key Services,CN=Services,%6%11"
+    CRLPublicationURLs:
+      - '1:C:\Windows\system32\CertSrv\CertEnroll\%3%8%9.crl'
+      - "2:http://pki.{{ domain }}/CertEnroll/%3%8%9.crl"
+      - "3:ldap:///CN=%7%8,CN=%2,CN=CDP,CN=Public Key Services,CN=Services,%6%10"
+    CRLOverlapUnits: 3
+    CRLOverlapPeriod: "Days"
+    CRLPeriodUnits: 7
+    CRLPeriod: "Days"
+    ValidityPeriod: Years
+    ValidityPeriodUnits: 3
+    DSConfigDN: "CN=Configuration,{{ domain_dn }}"
+    DSDomainDN: "{{ domain_dn }}"
+  register: sub_ca_settings
+- name: Restart CertSvc
+  win_service:
+    name: CertSvc
+    state: restarted
+  when: sub_ca_settings.changed
+  register: sub_cert_svc_service
+- name: Refresh CRL
+  win_shell: certutil.exe -crl
+  when: sub_cert_svc_service.changed

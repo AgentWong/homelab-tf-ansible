@@ -1,0 +1,4 @@
+---
+- hosts: "{{ root_ca_hostname }}"
+  roles: 
+  - root_certificate_authority
