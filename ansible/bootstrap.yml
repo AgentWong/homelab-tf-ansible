@@ -1,0 +1,27 @@
+---
+- name: Set KRB5 config
+  hosts: localhost
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+  - name: Set krb5 realms
+    blockinfile:
+      path: /etc/krb5.conf
+      insertafter: '\[realms\]'
+      block: |
+        EDEN.LOCAL = {
+          kdc = EDEN-DC-01.eden.local
+          kdc = EDEN-DC-02.eden.local
+        }
+      marker: "# {mark} ANSIBLE MANAGED BLOCK for realms"
+  - name: Set krb5 domain_realm
+    lineinfile:
+      path: /etc/krb5.conf
+      insertafter: '\[domain_realm\]'
+      line: '.eden.local = EDEN.LOCAL'
+  - name: Allow DNS resolution
+    lineinfile:
+      path: /etc/nsswitch.conf
+      regexp: 'hosts:          files myhostname mdns4_minimal \[NOTFOUND=return\] dns'
+      line: 'hosts:          files myhostname mdns4_minimal dns'

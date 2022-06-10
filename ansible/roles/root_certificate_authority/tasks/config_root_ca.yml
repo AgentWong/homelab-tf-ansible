@@ -1,0 +1,61 @@
+---
+- name: Configure CA as Standalone Root
+  win_dsc:
+    resource_name: ADCSCertificationAuthority
+    Ensure: Present
+    IsSingleInstance: 'Yes'
+    CAType: StandaloneRootCA
+    CACommonName: "{{  root_ca_common_name  }}"
+    CADistinguishedNameSuffix: "{{ domain_dn }}"
+    HashAlgorithmName: SHA256
+    KeyLength: 2048
+    CryptoProviderName: RSA#Microsoft Software Key Storage Provider
+    Credential_username: "{{  ansible_user  }}"
+    Credential_password: "{{  ansible_password  }}"
+- name: Configure ADCS Web Enrollment
+  win_dsc:
+    resource_name: ADCSWebEnrollment
+    Ensure: Present
+    IsSingleInstance: 'Yes'
+    Credential_username: "{{  ansible_user  }}"
+    Credential_password: "{{  ansible_password  }}"
+- name: Configure Root CA settings
+  win_dsc:
+    resource_name: AdcsCertificationAuthoritySettings
+    IsSingleInstance: 'Yes'
+    CACertPublicationURLs:
+      - '1:C:\Windows\system32\CertSrv\CertEnroll\%1_%3%4.crt'
+      - "2:ldap:///CN=%7,CN=AIA,CN=Public Key Services,CN=Services,%6%11"
+      - "2:http://pki.{{ domain }}/CertEnroll/%1_%3%4.crt"
+    CRLPublicationURLs:
+      - '1:C:\Windows\system32\CertSrv\CertEnroll\%3%8%9.crl'
+      - "10:ldap:///CN=%7%8,CN=%2,CN=CDP,CN=Public Key Services,CN=Services,%6%10"
+      - "2:http://pki.{{ domain }}/CertEnroll/%3%8%9.crl"
+    CRLOverlapUnits: 6
+    CRLOverlapPeriod: "Hours"
+    CRLPeriodUnits: 13
+    CRLPeriod: "Weeks"
+    ValidityPeriod: Years
+    ValidityPeriodUnits: 10
+    DSConfigDN: "CN=Configuration,{{ domain_dn }}"
+    DSDomainDN: "{{ domain_dn }}"
+  register: root_ca_settings
+- name: Restart CertSvc
+  win_service:
+    name: CertSvc
+    state: restarted
+  when: root_ca_settings.changed
+  register: root_cert_svc_service
+- name: Refresh CRL
+  win_shell: certutil.exe -crl
+  when: root_cert_svc_service.changed
+- name: Fetch Root CA CRT File
+  fetch:
+    src: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  root_ca_crt_name  }}.crt"
+    dest: "/tmp/{{  root_ca_crt_name  }}.crt"
+    flat: yes
+- name: Fetch Root CA CRL File
+  fetch:
+    src: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  root_ca_common_name  }}.crl"
+    dest: "/tmp/{{  root_ca_common_name  }}.crl"
+    flat: yes

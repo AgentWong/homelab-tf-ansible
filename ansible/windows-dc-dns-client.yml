@@ -1,0 +1,22 @@
+---
+- name: Configure DC DNS Settings
+  hosts: 
+  - "{{ pdc_hostname }}"
+  - "{{ rdc_hostname }}"
+  tasks:
+    - name: Configure PDC DNS
+      win_dns_client:
+        adapter_names: '*'
+        dns_servers:
+        - "{{ hostvars[rdc_hostname]['ansible_host'] }}"
+        - "{{ hostvars[pdc_hostname]['ansible_host'] }}"
+        - 127.0.0.1
+      when: inventory_hostname == pdc_hostname
+    - name: Configure RDC DNS
+      win_dns_client:
+        adapter_names: '*'
+        dns_servers:
+        - "{{ hostvars[pdc_hostname]['ansible_host'] }}"
+        - "{{ hostvars[rdc_hostname]['ansible_host'] }}"
+        - 127.0.0.1
+      when: inventory_hostname == rdc_hostname
