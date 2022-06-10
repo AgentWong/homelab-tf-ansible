@@ -2,6 +2,7 @@ pipeline {
     parameters {
         string(name: 'REF', defaultValue: '\${ghprbActualCommit}', description: 'Commit to build')
     }
+    agent none
     stages {
         stage('Test') {
             agent {
@@ -12,7 +13,7 @@ pipeline {
                 }
             }
             steps {
-                terragrunt hclfmt
+                sh "terragrunt hclfmt"
             }
         }
         
