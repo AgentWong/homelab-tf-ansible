@@ -1,6 +1,3 @@
-#Custom
-*.password
-
 ### Terragrunt ###
 .*.sw?
 .idea
