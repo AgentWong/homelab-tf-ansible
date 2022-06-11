@@ -28,12 +28,12 @@ pipeline {
                     sh "terragrunt validate"
                     sh "terragrunt apply -auto-approve"
                     sh "terragrunt state list"
-                }
+                }/* 
                 dir('terraform/dev/vsphere/tags'){
                     sh "terragrunt validate"
                     sh "terragrunt apply -auto-approve"
                     sh "terragrunt state list"
-                }
+                } */
             }
         }
         

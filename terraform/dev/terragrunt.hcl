@@ -1,9 +1,5 @@
 remote_state {
   backend = "local"
-  generate = {
-    path      = "backend.tf"
-    if_exists = "overwrite"
-  }
   config = {
     path = "/project/tfstate/${path_relative_to_include()}/terraform.tfstate"
   }
@@ -25,5 +21,8 @@ generate "provider" {
     vsphere_server       = "192.168.50.65"
     allow_unverified_ssl = true
   }
+  terraform {
+        backend "local" {}
+    }
   EOF
 }
