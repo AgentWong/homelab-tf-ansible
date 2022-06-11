@@ -28,12 +28,12 @@ pipeline {
                     sh "terragrunt validate"
                     sh "terragrunt apply -auto-approve"
                     sh "terragrunt state list"
-                }/* 
+                }
                 dir('terraform/dev/vsphere/tags'){
                     sh "terragrunt validate"
                     sh "terragrunt apply -auto-approve"
                     sh "terragrunt state list"
-                } */
+                }
             }
         }
         
@@ -45,9 +45,7 @@ pipeline {
             cleanWs(cleanWhenNotBuilt: false,
                     deleteDirs: true,
                     disableDeferredWipeout: true,
-                    notFailBuild: true,
-                    patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
-                               [pattern: '.propsfile', type: 'EXCLUDE']])
+                    notFailBuild: true)
             }
         }
     }
