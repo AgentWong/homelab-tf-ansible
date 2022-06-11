@@ -23,19 +23,16 @@ pipeline {
                     sh "terragrunt validate"
                     sh "terragrunt apply -auto-approve"
                     sh "terragrunt state list"
-                    sh "cat backend.tf"
                 }
                 dir('terraform/dev/vsphere/tag_category'){
                     sh "terragrunt validate"
                     sh "terragrunt apply -auto-approve"
                     sh "terragrunt state list"
-                    sh "cat backend.tf"
                 }
                 dir('terraform/dev/vsphere/tags'){
                     sh "terragrunt validate"
                     sh "terragrunt apply -auto-approve"
                     sh "terragrunt state list"
-                    sh "cat backend.tf"
                 }
             }
         }
