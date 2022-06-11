@@ -16,10 +16,11 @@ pipeline {
                 sh "pwd"
                 sh "hostname"
                 sh "ls -lah"
-                sh "cd terraform/dev"
-                sh "pwd"
-                sh "terragrunt run-all validate"
-                sh "terragrunt hclfmt"
+                dir('terraform/dev'){
+                    sh "pwd"
+                    sh "terragrunt run-all validate"
+                    sh "terragrunt hclfmt"
+                }
             }
         }
         
