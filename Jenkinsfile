@@ -15,7 +15,7 @@ pipeline {
             steps {
                 dir('terraform/dev/vsphere/base'){
                     sh "terragrunt validate"
-                    sh "terragrunt apply --terragrunt-non-interactive"
+                    sh "terragrunt apply -auto-approve"
                     sh "terragrunt state list"
                     sh "terragrunt output"
                 }
