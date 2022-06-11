@@ -14,6 +14,8 @@ pipeline {
             }
             steps {
                 sh "pwd"
+                sh "hostname"
+                sh "ls -lah"
                 sh "cd /project/terraform/dev"
                 sh "pwd"
                 sh "terragrunt run-all validate"
