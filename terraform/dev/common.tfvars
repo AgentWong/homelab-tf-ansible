@@ -1,13 +1,6 @@
 # Common vars
-admin_password   = "Vmware123!"
-vsphere_user = "administrator@vsphere.local"
-vsphere_password = "Vmware123!"
-vsphere_server = "eden-vc-01.eden.local"
-vsphere_dc_name = "Garden"
-vsphere_datastore = "vsanDatastore"
-vsphere_compute_cluster ="EDEN"
-vsphere_portgroup_name = "VM Network"
-vsphere_template_name = "win-2019-datacenter-core-template"
+#admin_password
+#vsphere_password
 join_domain = "eden.local"
 domain_admin_user = "radmin"
-domain_admin_password = "Vmware123!"
+#domain_admin_password

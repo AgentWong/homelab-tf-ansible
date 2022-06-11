@@ -1,0 +1,7 @@
+vsphere_server = "192.168.50.65"
+vsphere_dc_name = "Garden"
+vsphere_datastore = "vsanDatastore"
+vsphere_compute_cluster ="EDEN"
+vsphere_portgroup_name = "VM Network"
+vsphere_template_name = "win-2019-datacenter-core-template"
+vsphere_user = "administrator@vsphere.local"
