@@ -5,4 +5,3 @@ RUN apk update && \
     -O /usr/local/bin/terragrunt && \
     chmod +x /usr/local/bin/terragrunt &&\
     apk del wget
-WORKDIR /project

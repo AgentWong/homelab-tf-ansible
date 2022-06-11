@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "../../modules//vsphere/tag_category"
+  source = "../../../modules//vsphere/tag_category"
 
   extra_arguments "custom_vars" {
     commands = [
