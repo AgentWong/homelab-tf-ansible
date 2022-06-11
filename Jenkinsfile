@@ -13,11 +13,11 @@ pipeline {
                 }
             }
             steps {
-                dir('/project/terraform/dev'){
-                    sh "pwd"
-                    sh "terragrunt run-all validate"
-                    sh "terragrunt hclfmt"
-                }
+                sh "pwd"
+                sh "cd /project/terraform/dev"
+                sh "pwd"
+                sh "terragrunt run-all validate"
+                sh "terragrunt hclfmt"
             }
         }
         
