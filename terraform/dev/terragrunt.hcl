@@ -25,8 +25,5 @@ generate "provider" {
     vsphere_server       = "192.168.50.65"
     allow_unverified_ssl = true
   }
-  terraform {
-        backend "local" {}
-    }
   EOF
 }
