@@ -1,0 +1,1 @@
+variable "category_name" {}

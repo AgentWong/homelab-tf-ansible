@@ -1,0 +1,6 @@
+- name: gen_sub_ca_on_root
+  include_tasks: gen_sub_ca_cert.yml
+  when: inventory_hostname == root_ca_hostname
+- name: finish_config_sub_ca
+  include_tasks: finish_config_sub_ca.yml
+  when: inventory_hostname == sub_ca_hostname

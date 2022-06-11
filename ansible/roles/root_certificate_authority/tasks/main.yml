@@ -1,0 +1,4 @@
+- name: Install Root CA
+  include_tasks: install_root_ca.yml
+- name: Configure Root CA
+  include_tasks: config_root_ca.yml
