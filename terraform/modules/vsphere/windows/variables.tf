@@ -1,0 +1,1 @@
+variable "vsphere_template_name" {}

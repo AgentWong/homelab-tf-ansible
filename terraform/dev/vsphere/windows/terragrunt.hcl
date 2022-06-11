@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "../../../modules//vsphere/base"
+  source = "../../../modules//vsphere/windows"
 
   extra_arguments "custom_vars" {
     commands = [
@@ -18,8 +18,5 @@ terraform {
 }
 
 inputs = {
-  vsphere_dc_name = "Garden"
-  vsphere_datastore = "vsanDatastore"
-  vsphere_compute_cluster ="EDEN"
-  vsphere_portgroup_name = "VM Network"
-}
+    vsphere_template_name = "win-2019-datacenter-core-template"
+  }

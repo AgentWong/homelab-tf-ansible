@@ -14,6 +14,7 @@ generate "provider" {
   }
   data "vault_generic_secret" "password" {
     path = "secret/jenkinstest/password"
+    sensitive = true
   }
   provider "vsphere" {
     user                 = "administrator@vsphere.local"
