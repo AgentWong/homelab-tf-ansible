@@ -89,9 +89,7 @@ resource "vsphere_virtual_machine" "rdc" {
         auto_logon            = true
         auto_logon_count      = 1
         run_once_command_list = ["cmd.exe /c powershell.exe Invoke-WebRequest -Uri https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1",
-        "cmd.exe /c powershell.exe -ExecutionPolicy Bypass -File ConfigureRemotingForAnsible.ps1",
-        "cmd.exe /c powershell.exe Enable-WSManCredSSP -Role Server -Force",
-        "cmd.exe /c powershell.exe Set-Item -Path 'WSMan:\\localhost\\Service\\Auth\\CredSSP' -Value $true"
+        "cmd.exe /c powershell.exe -ExecutionPolicy Bypass -File ConfigureRemotingForAnsible.ps1"
         ]
       }
       network_interface {
@@ -106,7 +104,7 @@ resource "vsphere_virtual_machine" "rdc" {
   provisioner "local-exec" {
     command = templatefile("${var.template_file}", { 
       change_dir = var.change_dir, 
-      ansible_user = "radmin"
+      ansible_user = "radmin@EDEN.LOCAL"
       password = nonsensitive(data.vault_generic_secret.password.data["password"]),
       extra_args = "pdc_hostname=${var.pdc_name} rdc_hostname=${var.rdc_name}",
       ansible_playbook = var.rdc_ansible_playbook
