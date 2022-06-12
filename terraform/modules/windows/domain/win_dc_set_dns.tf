@@ -1,6 +1,7 @@
 resource "null_resource" "set_dc_dns" {
   provisioner "local-exec" {
     command = templatefile("${var.template_file}", { 
+      sleep = "",
       change_dir = var.change_dir, 
       ansible_user = var.domain_admin_user
       password = nonsensitive(data.vault_generic_secret.password.data["password"]),
