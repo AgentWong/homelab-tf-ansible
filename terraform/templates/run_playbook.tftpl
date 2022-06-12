@@ -13,10 +13,6 @@ else
 fi
 }
 cd ${change_dir}
-ansible all --extra-vars "${extra_args}" \
---extra-vars "ansible_user=${ansible_user} ansible_password=${password} \
-password=${password}" \
--m debug -a "var=hostvars"
 ansible-playbook --extra-vars "${extra_args}" \
 --extra-vars "ansible_user=${ansible_user} ansible_password=${password} \
 password=${password}" \
