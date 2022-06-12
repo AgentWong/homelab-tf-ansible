@@ -19,9 +19,6 @@ pipeline {
                 }
             }
             steps {
-                dir('ansible/inventory'){
-                    sh "cp /project/ansible/inventory/homelab.vmware.yml ."
-                }
                 dir('terraform/dev/vsphere/base'){
                     sh "terragrunt validate"
                     sh "terragrunt apply -auto-approve"
@@ -37,6 +34,28 @@ pipeline {
                     sh "terragrunt apply -auto-approve"
                     sh "terragrunt state list"
                 }
+                dir('terraform/dev/vsphere/windows'){
+                    sh "terragrunt validate"
+                    sh "terragrunt apply -auto-approve"
+                    sh "terragrunt state list"
+                }
+            }
+        }
+        stage('Deploy Active Directory') {
+            agent {
+                dockerfile {
+                    label 'docker'
+                    args '--cap-add=IPC_LOCK \
+                    -v /nfs/terraform/state:/project/tfstate:rw \
+                    -v /nfs/ansible/inventory:/project/ansible/inventory \
+                    -e VAULT_ADDR=${VAULT_ADDR} -e VAULT_TOKEN=${VAULT_TOKEN} \
+                    '
+                }
+            }
+            steps {
+                dir('ansible/inventory'){
+                    sh "cp /project/ansible/inventory/homelab.vmware.yml ."
+                }
                 dir('terraform/dev/ad'){
                     sh "terragrunt validate"
                     sh "terragrunt apply -auto-approve"
@@ -44,7 +63,6 @@ pipeline {
                 }
             }
         }
-        
     }
     post {
         // Clean after build
