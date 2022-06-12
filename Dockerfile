@@ -4,11 +4,10 @@ RUN apk add --no-cache terraform python3 ansible bash krb5 krb5-pkinit && \
     wget -q https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.2/terragrunt_linux_amd64 \
     -O /usr/bin/terragrunt && \
     chmod +x /usr/bin/terragrunt && \
-    pip install --no-cache-dir pyvmomi pywinrm pywinrm[kerberos] && \
-    pip install --no-cache-dir --upgrade pip setuptools && \
-    pip install --no-cache-dir --upgrade git+https://github.com/vmware/vsphere-automation-sdk-python.git && \
+    pip install pyvmomi pywinrm pywinrm[kerberos] && \
+    pip install --upgrade pip setuptools && \
+    pip install --upgrade git+https://github.com/vmware/vsphere-automation-sdk-python.git && \
     ansible-galaxy collection install community.windows && \
-    apk del temporary && \
-    rm -rf /root/.cache/pip
+    apk del temporary
 RUN adduser -D -g "" -h /home/ubuntu \
     -u 1000 -s /bin/bash ubuntu
