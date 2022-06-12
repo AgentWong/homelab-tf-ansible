@@ -4,7 +4,6 @@ variable "resource_pool_id" {}
 variable "datastore_id" {}
 variable "network_id" {}
 variable "dc_id" {}
-variable "vsphere_template_name" {}
 variable "join_domain" {}
 variable "domain_admin_user" {}
 
