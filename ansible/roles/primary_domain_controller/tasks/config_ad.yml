@@ -36,7 +36,7 @@
     name: radmin
     firstname: Remote
     surname: Administrator
-    password: "{{ domain_admin_password }}"
+    password: "{{ password }}"
     groups: 
       - Domain Admins
       - Enterprise Admins

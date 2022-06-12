@@ -3,26 +3,26 @@
 # Primary DC
 resource "vsphere_virtual_machine" "pdc" {
   name             = var.pdc_name
-  resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
-  datastore_id     = data.vsphere_datastore.datastore.id
-  firmware         = data.vsphere_virtual_machine.template.firmware
+  resource_pool_id = var.resource_pool_id
+  datastore_id     = var.dc_id
+  firmware         = var.vm_firmware
   num_cpus         = 2
   memory           = 4096
-  guest_id         = data.vsphere_virtual_machine.template.guest_id
+  guest_id         = var.guest_id
   network_interface {
-    network_id   = data.vsphere_network.network.id
-    adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
+    network_id   = var.network_id
+    adapter_type = var.vm_net_interface_type
   }
   disk {
     label            = "disk0"
-    size             = data.vsphere_virtual_machine.template.disks.0.size
-    eagerly_scrub    = data.vsphere_virtual_machine.template.disks.0.eagerly_scrub
-    thin_provisioned = data.vsphere_virtual_machine.template.disks.0.thin_provisioned
+    size             = var.disk_size
+    eagerly_scrub    = var.disk_eagerly_scrub
+    thin_provisioned = var.disk_thin_provisioned
   }
-  scsi_type = data.vsphere_virtual_machine.template.scsi_type
+  scsi_type = var.scsi_type
 
   clone {
-    template_uuid = data.vsphere_virtual_machine.template.id
+    template_uuid = var.template_id
     customize {
       windows_options {
         computer_name    = var.pdc_name
@@ -31,7 +31,8 @@ resource "vsphere_virtual_machine" "pdc" {
         auto_logon       = true
         auto_logon_count = 1
         run_once_command_list = ["cmd.exe /c powershell.exe Invoke-WebRequest -Uri https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1",
-        "cmd.exe /c powershell.exe -ExecutionPolicy Bypass -File ConfigureRemotingForAnsible.ps1"]
+        "cmd.exe /c powershell.exe -ExecutionPolicy Bypass -File ConfigureRemotingForAnsible.ps1",
+        "cmd.exe /c powershell.exe Enable-WSManCredSSP -Role Server -Force"]
       }
       network_interface {
         ipv4_address    = var.pdc_ipv4_address
@@ -57,7 +58,10 @@ resource "vsphere_virtual_machine" "pdc" {
         fi
       }
       cd ${var.change_dir}
-      ansible-playbook --extra-vars 'pdc_hostname=${var.pdc_name}' ${var.pdc_ansible_playbook}; exit_test $?
+      ansible-playbook --extra-vars 'pdc_hostname=${var.pdc_name} \
+      ansible_user=administrator ansible_password=${data.vault_generic_secret.password.data["password"]} \
+      password=${data.vault_generic_secret.password.data["password"]}' \
+      ${var.pdc_ansible_playbook}; exit_test $?
       EOT
   }
 }
@@ -65,37 +69,38 @@ resource "vsphere_virtual_machine" "pdc" {
 # Replica DC
 resource "vsphere_virtual_machine" "rdc" {
   name             = var.rdc_name
-  resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
-  datastore_id     = data.vsphere_datastore.datastore.id
-  firmware         = data.vsphere_virtual_machine.template.firmware
+  resource_pool_id = var.resource_pool_id
+  datastore_id     = var.dc_id
+  firmware         = var.vm_firmware
   num_cpus         = 2
   memory           = 4096
-  guest_id         = data.vsphere_virtual_machine.template.guest_id
+  guest_id         = var.guest_id
   network_interface {
-    network_id   = data.vsphere_network.network.id
-    adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
+    network_id   = var.network_id
+    adapter_type = var.vm_net_interface_type
   }
   disk {
     label            = "disk0"
-    size             = data.vsphere_virtual_machine.template.disks.0.size
-    eagerly_scrub    = data.vsphere_virtual_machine.template.disks.0.eagerly_scrub
-    thin_provisioned = data.vsphere_virtual_machine.template.disks.0.thin_provisioned
+    size             = var.disk_size
+    eagerly_scrub    = var.disk_eagerly_scrub
+    thin_provisioned = var.disk_thin_provisioned
   }
-  scsi_type = data.vsphere_virtual_machine.template.scsi_type
+  scsi_type = var.scsi_type
 
   clone {
-    template_uuid = data.vsphere_virtual_machine.template.id
+    template_uuid = var.template_id
     customize {
       windows_options {
         computer_name         = var.rdc_name
-        admin_password        = var.admin_password
+        admin_password        = data.vault_generic_secret.password.data["password"]
         join_domain           = var.join_domain
         domain_admin_user     = var.domain_admin_user
-        domain_admin_password = var.domain_admin_password
+        domain_admin_password = data.vault_generic_secret.password.data["password"]
         auto_logon            = true
         auto_logon_count      = 1
         run_once_command_list = ["cmd.exe /c powershell.exe Invoke-WebRequest -Uri https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1",
-        "cmd.exe /c powershell.exe -ExecutionPolicy Bypass -File ConfigureRemotingForAnsible.ps1"]
+        "cmd.exe /c powershell.exe -ExecutionPolicy Bypass -File ConfigureRemotingForAnsible.ps1",
+        "cmd.exe /c powershell.exe Enable-WSManCredSSP -Role Server -Force"]
       }
       network_interface {
         ipv4_address    = var.rdc_ipv4_address
@@ -121,7 +126,10 @@ resource "vsphere_virtual_machine" "rdc" {
         fi
       }
       cd ${var.change_dir}
-      ansible-playbook --extra-vars 'pdc_hostname=${var.pdc_name} rdc_hostname=${var.rdc_name}' ${var.rdc_ansible_playbook}; exit_test $?
+      ansible-playbook --extra-vars 'pdc_hostname=${var.pdc_name} rdc_hostname=${var.rdc_name} \
+      ansible_user=administrator ansible_password=${data.vault_generic_secret.password.data["password"]} \
+      password=${data.vault_generic_secret.password.data["password"]}' \
+       ${var.rdc_ansible_playbook}; exit_test $?
       EOT
   }
   depends_on = [

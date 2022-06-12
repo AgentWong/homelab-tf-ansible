@@ -19,6 +19,9 @@ pipeline {
                 }
             }
             steps {
+                dir('ansible/inventory'){
+                    sh "cp /project/ansible/inventory/homelab.vmware.yml ."
+                }
                 dir('terraform/dev/vsphere/base'){
                     sh "terragrunt validate"
                     sh "terragrunt apply -auto-approve"
@@ -30,6 +33,11 @@ pipeline {
                     sh "terragrunt state list"
                 }
                 dir('terraform/dev/vsphere/tags'){
+                    sh "terragrunt validate"
+                    sh "terragrunt apply -auto-approve"
+                    sh "terragrunt state list"
+                }
+                dir('terraform/dev/ad'){
                     sh "terragrunt validate"
                     sh "terragrunt apply -auto-approve"
                     sh "terragrunt state list"

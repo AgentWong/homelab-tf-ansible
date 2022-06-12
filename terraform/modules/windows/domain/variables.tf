@@ -1,17 +1,22 @@
 # Common vars
-variable "admin_password" {}
 variable "change_dir" {}
-variable "vsphere_user" {}
-variable "vsphere_password" {}
-variable "vsphere_server" {}
-variable "vsphere_dc_name" {}
-variable "vsphere_datastore" {}
-variable "vsphere_compute_cluster" {}
-variable "vsphere_portgroup_name" {}
+variable "resource_pool_id" {}
+variable "datastore_id" {}
+variable "network_id" {}
+variable "dc_id" {}
 variable "vsphere_template_name" {}
 variable "join_domain" {}
 variable "domain_admin_user" {}
-variable "domain_admin_password" {}
+
+# VM Guest vars
+variable "vm_firmware" {}
+variable "guest_id" {}
+variable "vm_net_interface_type" {}
+variable "disk_size" {}
+variable "disk_eagerly_scrub" {}
+variable "disk_thin_provisioned" {}
+variable "scsi_type" {}
+variable "template_id" {}
 
 # PDC vars
 variable "pdc_ipv4_address" {}

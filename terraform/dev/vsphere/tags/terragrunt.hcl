@@ -20,6 +20,6 @@ dependency "tag_category" {
   config_path = "../tag_category"
 }
 inputs = {
-    category_id = dependency.tag_category.outputs.category_id
-    tag_names = ["Domain Controller", "File Server"]
-  }
+  category_id = dependency.tag_category.outputs.category_id
+  tag_names   = ["Domain Controller", "File Server"]
+}

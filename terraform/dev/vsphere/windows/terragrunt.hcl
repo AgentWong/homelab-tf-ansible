@@ -20,6 +20,6 @@ dependency "vsphere_base" {
   config_path = "../base"
 }
 inputs = {
-    vsphere_template_name = "win-2019-datacenter-core-template"
-    dc_id = dependency.vsphere_base.outputs.dc_id
-  }
+  vsphere_template_name = "win-2019-datacenter-core-template"
+  dc_id                 = dependency.vsphere_base.outputs.dc_id
+}
