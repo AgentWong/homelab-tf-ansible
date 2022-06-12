@@ -13,7 +13,7 @@ fi
 }
 cd ${change_dir}
 
-ansible-playbook --extra-vars "${hostnames}" \
+ansible-playbook --extra-vars "${extra_args}" \
 --extra-vars "ansible_user=administrator ansible_password=${password} \
 password=${password}" \
 ${ansible_playbook}; exit_test $?

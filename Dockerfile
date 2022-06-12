@@ -5,7 +5,7 @@ RUN apk update && \
     -O /usr/local/bin/terragrunt && \
     chmod +x /usr/local/bin/terragrunt && \
     apk del wget && \
-    pip install pyvmomi && \
+    pip install pyvmomi pywinrm pywinrm[credssp] && \
     pip install --upgrade pip setuptools && \
     pip install --upgrade git+https://github.com/vmware/vsphere-automation-sdk-python.git && \
     ansible-galaxy collection install community.windows
