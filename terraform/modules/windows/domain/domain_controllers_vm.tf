@@ -106,7 +106,7 @@ resource "vsphere_virtual_machine" "rdc" {
       change_dir = var.change_dir, 
       ansible_user = "radmin@EDEN.LOCAL"
       password = nonsensitive(data.vault_generic_secret.password.data["password"]),
-      extra_args = "pdc_hostname=${var.pdc_name} rdc_hostname=${var.rdc_name}",
+      extra_args = "pdc_hostname=${var.pdc_name}.${join_domain} rdc_hostname=${var.rdc_name}.${join_domain}",
       ansible_playbook = var.rdc_ansible_playbook
       })
   }
