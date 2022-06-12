@@ -47,6 +47,7 @@ resource "vsphere_virtual_machine" "pdc" {
 
   provisioner "local-exec" {
     command = templatefile("${var.template_file}", { 
+      sleep = ""
       change_dir = var.change_dir, 
       ansible_user = "administrator"
       password = nonsensitive(data.vault_generic_secret.password.data["password"]),
@@ -103,6 +104,7 @@ resource "vsphere_virtual_machine" "rdc" {
 
   provisioner "local-exec" {
     command = templatefile("${var.template_file}", { 
+      sleep = "sleep 30s"
       change_dir = var.change_dir, 
       ansible_user = "radmin@EDEN.LOCAL"
       password = nonsensitive(data.vault_generic_secret.password.data["password"]),
