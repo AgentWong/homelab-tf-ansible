@@ -1,0 +1,19 @@
+#!/bin/bash
+${sleep}
+exit_test () {
+RED='\033[0;31m' # Red Text
+GREEN='\033[0;32m' # Green Text
+BLUE='\033[0;34m' # Blue Text
+NC='\033[0m' # No Color
+if [ $1 -eq 0 ]; then
+    printf "\n $GREEN Playbook Succeeded $NC \n"
+else
+    printf "\n $RED Failed Playbook $NC \n" >&2
+    exit 1
+fi
+}
+cd ${change_dir}
+ansible-playbook --extra-vars "${extra_args}" \
+--extra-vars "ansible_user=${ansible_user} ansible_password=${password} \
+password=${password}" \
+${ansible_playbook}; exit_test $?

@@ -1,7 +1,7 @@
 remote_state {
   backend = "local"
   config = {
-    path = "/project/tfstate/terraform.tfstate"
+    path = "/project/tfstate/${path_relative_to_include()}/terraform.tfstate"
   }
 }
 

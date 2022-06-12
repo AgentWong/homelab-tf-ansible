@@ -10,6 +10,13 @@
     state: present
   register: init_eden_users_ou
 
+- name: Create reverse lookup zone
+  community.windows.win_dns_zone:
+    name: 50.168.192.in-addr.arpa
+    replication: forest
+    type: primary
+    state: present
+
 # The second execution is needed because otherwise the variable only contains 'path' value and not 'ou'
 - name: Poll EDEN Computers
   community.windows.win_domain_ou:
@@ -36,7 +43,7 @@
     name: radmin
     firstname: Remote
     surname: Administrator
-    password: "{{ domain_admin_password }}"
+    password: "{{ password }}"
     groups: 
       - Domain Admins
       - Enterprise Admins
