@@ -44,7 +44,7 @@ resource "vsphere_virtual_machine" "pdc" {
   }
 
   provisioner "local-exec" {
-    command = templatefile("${path.module}/../../../run_playbook.tftpl", { 
+    command = templatefile("${path.module}/../../../templates/run_playbook.tftpl", { 
       change_dir = var.change_dir, 
       password = data.vault_generic_secret.password.data["password"],
       hostnames = "pdc_hostname=${var.pdc_name}"
