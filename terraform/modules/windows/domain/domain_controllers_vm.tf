@@ -4,7 +4,7 @@
 resource "vsphere_virtual_machine" "pdc" {
   name             = var.pdc_name
   resource_pool_id = var.resource_pool_id
-  datastore_id     = var.dc_id
+  datastore_id     = var.datastore_id
   firmware         = var.vm_firmware
   num_cpus         = 2
   memory           = 4096
@@ -70,7 +70,7 @@ resource "vsphere_virtual_machine" "pdc" {
 resource "vsphere_virtual_machine" "rdc" {
   name             = var.rdc_name
   resource_pool_id = var.resource_pool_id
-  datastore_id     = var.dc_id
+  datastore_id     = var.datastore_id
   firmware         = var.vm_firmware
   num_cpus         = 2
   memory           = 4096
