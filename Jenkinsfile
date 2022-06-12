@@ -13,7 +13,6 @@ pipeline {
                     label 'docker'
                     args '--cap-add=IPC_LOCK \
                     -v /nfs/terraform/state:/project/tfstate:rw \
-                    -v /nfs/ansible/inventory:/project/ansible/inventory \
                     -e VAULT_ADDR=${VAULT_ADDR} -e VAULT_TOKEN=${VAULT_TOKEN} \
                     '
                 }
@@ -48,6 +47,7 @@ pipeline {
                     args '--cap-add=IPC_LOCK \
                     -v /nfs/terraform/state:/project/tfstate:rw \
                     -v /nfs/ansible/inventory:/project/ansible/inventory \
+                    -v /nfs/ansible/krb5.conf:/etc/krb5.conf
                     -e VAULT_ADDR=${VAULT_ADDR} -e VAULT_TOKEN=${VAULT_TOKEN} \
                     '
                 }

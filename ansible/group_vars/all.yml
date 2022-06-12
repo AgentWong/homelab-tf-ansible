@@ -2,7 +2,7 @@
 ansible_port: 5985
 ansible_connection: winrm
 ansible_winrm_server_cert_validation: ignore
-ansible_winrm_transport: credssp
+ansible_winrm_transport: kerberos
 domain: eden.local
 domain_upper: EDEN.LOCAL
 domain_dn: DC=EDEN, DC=LOCAL

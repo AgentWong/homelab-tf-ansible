@@ -48,8 +48,9 @@ resource "vsphere_virtual_machine" "pdc" {
   provisioner "local-exec" {
     command = templatefile("${var.template_file}", { 
       change_dir = var.change_dir, 
+      ansible_user = "administrator"
       password = nonsensitive(data.vault_generic_secret.password.data["password"]),
-      extra_args = "pdc_hostname=${var.pdc_name}",
+      extra_args = "pdc_hostname=${var.pdc_name} ansible_winrm_transport=credssp",
       ansible_playbook = var.pdc_ansible_playbook
       })
   }
@@ -105,6 +106,7 @@ resource "vsphere_virtual_machine" "rdc" {
   provisioner "local-exec" {
     command = templatefile("${var.template_file}", { 
       change_dir = var.change_dir, 
+      ansible_user = "radmin"
       password = nonsensitive(data.vault_generic_secret.password.data["password"]),
       extra_args = "pdc_hostname=${var.pdc_name} rdc_hostname=${var.rdc_name}",
       ansible_playbook = var.rdc_ansible_playbook
