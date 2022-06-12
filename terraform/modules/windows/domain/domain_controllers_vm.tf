@@ -32,7 +32,9 @@ resource "vsphere_virtual_machine" "pdc" {
         auto_logon_count = 1
         run_once_command_list = ["cmd.exe /c powershell.exe Invoke-WebRequest -Uri https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1",
         "cmd.exe /c powershell.exe -ExecutionPolicy Bypass -File ConfigureRemotingForAnsible.ps1",
-        "cmd.exe /c powershell.exe Enable-WSManCredSSP -Role Server -Force"]
+        "cmd.exe /c powershell.exe Enable-WSManCredSSP -Role Server -Force",
+        "cmd.exe /c powershell.exe Set-Item -Path 'WSMan:\\localhost\\Service\\Auth\\CredSSP' -Value $true"
+        ]
       }
       network_interface {
         ipv4_address    = var.pdc_ipv4_address
@@ -46,7 +48,7 @@ resource "vsphere_virtual_machine" "pdc" {
   provisioner "local-exec" {
     command = templatefile("${var.template_file}", { 
       change_dir = var.change_dir, 
-      password = data.vault_generic_secret.password.data["password"],
+      password = nonsensitive(data.vault_generic_secret.password.data["password"]),
       extra_args = "pdc_hostname=${var.pdc_name}",
       ansible_playbook = var.pdc_ansible_playbook
       })
@@ -87,7 +89,9 @@ resource "vsphere_virtual_machine" "rdc" {
         auto_logon_count      = 1
         run_once_command_list = ["cmd.exe /c powershell.exe Invoke-WebRequest -Uri https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1",
         "cmd.exe /c powershell.exe -ExecutionPolicy Bypass -File ConfigureRemotingForAnsible.ps1",
-        "cmd.exe /c powershell.exe Enable-WSManCredSSP -Role Server -Force"]
+        "cmd.exe /c powershell.exe Enable-WSManCredSSP -Role Server -Force",
+        "cmd.exe /c powershell.exe Set-Item -Path 'WSMan:\\localhost\\Service\\Auth\\CredSSP' -Value $true"
+        ]
       }
       network_interface {
         ipv4_address    = var.rdc_ipv4_address
@@ -101,7 +105,7 @@ resource "vsphere_virtual_machine" "rdc" {
   provisioner "local-exec" {
     command = templatefile("${var.template_file}", { 
       change_dir = var.change_dir, 
-      password = data.vault_generic_secret.password.data["password"],
+      password = nonsensitive(data.vault_generic_secret.password.data["password"]),
       extra_args = "pdc_hostname=${var.pdc_name} rdc_hostname=${var.rdc_name}",
       ansible_playbook = var.rdc_ansible_playbook
       })
