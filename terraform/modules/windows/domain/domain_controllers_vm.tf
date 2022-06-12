@@ -26,7 +26,7 @@ resource "vsphere_virtual_machine" "pdc" {
     customize {
       windows_options {
         computer_name    = var.pdc_name
-        admin_password   = var.admin_password
+        admin_password   = data.vault_generic_secret.password.data["password"]
         workgroup        = "WORKGROUP"
         auto_logon       = true
         auto_logon_count = 1
