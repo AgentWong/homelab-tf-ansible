@@ -17,7 +17,7 @@ ansible all --extra-vars "${extra_args}" \
 --extra-vars "ansible_user=${ansible_user} ansible_password=${password} \
 password=${password}" \
 -m debug -a "var=hostvars"
-ansible-playbook -vvvv --extra-vars "${extra_args}" \
+ansible-playbook --extra-vars "${extra_args}" \
 --extra-vars "ansible_user=${ansible_user} ansible_password=${password} \
 password=${password}" \
 ${ansible_playbook}; exit_test $?
