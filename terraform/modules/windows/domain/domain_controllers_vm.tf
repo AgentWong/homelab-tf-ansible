@@ -44,26 +44,11 @@ resource "vsphere_virtual_machine" "pdc" {
   }
 
   provisioner "local-exec" {
-    command = <<EOT
-      #!/bin/bash
-      exit_test () {
-        RED='\033[0;31m' # Red Text
-        GREEN='\033[0;32m' # Green Text
-        BLUE='\033[0;34m' # Blue Text
-        NC='\033[0m' # No Color
-        if [ $1 -eq 0 ]; then
-          printf "\n $GREEN Playbook Succeeded $NC \n"
-        else
-          printf "\n $RED Failed Playbook $NC \n" >&2
-          exit 1
-        fi
-      }
-      cd ${var.change_dir}
-      ansible-playbook --extra-vars 'pdc_hostname=${var.pdc_name} \
-      ansible_user=administrator ansible_password=${data.vault_generic_secret.password.data["password"]} \
-      password=${data.vault_generic_secret.password.data["password"]}' \
-      ${var.pdc_ansible_playbook}; exit_test $?
-      EOT
+    command = templatefile("${path.module}/../../../run_playbook.tftpl", { 
+      change_dir = var.change_dir, 
+      password = data.vault_generic_secret.password.data["password"],
+      hostnames = "pdc_hostname=${var.pdc_name}"
+      })
   }
 }
 
