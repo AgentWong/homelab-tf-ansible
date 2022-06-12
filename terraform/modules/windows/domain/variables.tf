@@ -17,6 +17,9 @@ variable "disk_thin_provisioned" {}
 variable "scsi_type" {}
 variable "template_id" {}
 
+# Template file path
+variable "template_file" {}
+
 # PDC vars
 variable "pdc_ipv4_address" {}
 variable "pdc_dns_server_list" {

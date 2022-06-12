@@ -44,6 +44,8 @@ inputs = {
 
   change_dir = "${get_parent_terragrunt_dir()}/../../ansible"
 
+  template_file = "${get_parent_terragrunt_dir()}/../templates/run_playbook.tftpl"
+
   # PDC vars
   pdc_ipv4_address     = "192.168.50.71"
   pdc_dns_server_list  = ["192.168.50.1"]
