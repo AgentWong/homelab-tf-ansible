@@ -47,7 +47,8 @@ resource "vsphere_virtual_machine" "pdc" {
     command = templatefile("${var.template_file}", { 
       change_dir = var.change_dir, 
       password = data.vault_generic_secret.password.data["password"],
-      hostnames = "pdc_hostname=${var.pdc_name}"
+      hostnames = "pdc_hostname=${var.pdc_name}",
+      ansible_playbook = var.pdc_ansible_playbook
       })
   }
 }
