@@ -49,7 +49,7 @@ pipeline {
                     -v /nfs/ansible/inventory:/project/ansible/inventory \
                     -v /nfs/ansible/krb5.conf:/etc/krb5.conf \
                     -e VAULT_ADDR=${VAULT_ADDR} -e VAULT_TOKEN=${VAULT_TOKEN} \
-                    --dns 192.168.50.71 --dns 192.168.50.1 \
+                    --dns 192.168.50.71 --dns 192.168.50.1 --dns-search eden.local \
                     '
                 }
             }
