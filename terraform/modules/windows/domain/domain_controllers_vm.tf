@@ -45,6 +45,7 @@ resource "vsphere_virtual_machine" "pdc" {
 
   provisioner "local-exec" {
     command = <<EOT
+      #!/bin/bash
       exit_test () {
         RED='\033[0;31m' # Red Text
         GREEN='\033[0;32m' # Green Text
