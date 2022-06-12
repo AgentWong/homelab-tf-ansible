@@ -9,3 +9,5 @@ RUN apk update && \
     pip install --upgrade pip setuptools && \
     pip install --upgrade git+https://github.com/vmware/vsphere-automation-sdk-python.git && \
     ansible-galaxy collection install community.windows
+RUN adduser -D -g "" -h /home/ubuntu \
+    -u 1000 -s /bin/bash ubuntu
