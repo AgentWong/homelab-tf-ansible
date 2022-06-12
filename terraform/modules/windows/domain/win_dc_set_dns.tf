@@ -2,10 +2,10 @@ resource "null_resource" "set_dc_dns" {
   provisioner "local-exec" {
     command = templatefile("${var.template_file}", { 
       change_dir = var.change_dir, 
-      ansible_user = "radmin@EDEN.LOCAL"
+      ansible_user = var.domain_admin_user
       password = nonsensitive(data.vault_generic_secret.password.data["password"]),
       extra_args = "pdc_hostname=${var.pdc_name}.${var.join_domain} rdc_hostname=${var.rdc_name}.${var.join_domain}",
-      ansible_playbook = var.rdc_ansible_playbook
+      ansible_playbook = var.dc_dns_ansible_playbook
       })
   }
   depends_on = [
