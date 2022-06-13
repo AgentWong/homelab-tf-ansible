@@ -1,7 +1,6 @@
 ---
 - hosts: "{{ rdc_hostname }}"
   vars:
-    #ansible_host: "{{ rdc_hostname }}"
     pdc_ip: "{{ hostvars[pdc_hostname]['ansible_host'] }}"
     rdc_ip: "{{ hostvars[rdc_hostname]['ansible_host'] }}"
   roles: 

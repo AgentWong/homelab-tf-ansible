@@ -49,7 +49,7 @@ resource "vsphere_virtual_machine" "pdc" {
       change_dir = var.change_dir, 
       ansible_user = "administrator"
       password = nonsensitive(data.vault_generic_secret.password.data["password"]),
-      extra_args = "pdc_hostname=${var.pdc_name}. ansible_winrm_transport=basic",
+      extra_args = "pdc_hostname=${var.pdc_name}. ansible_winrm_transport=ntlm",
       ansible_playbook = var.pdc_ansible_playbook
       })
   }

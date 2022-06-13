@@ -2,7 +2,3 @@
 - hosts: "{{ pdc_hostname }}"
   roles: 
   - primary_domain_controller
-  #tasks:
-    #- name: Setup PDC
-      #include_role:
-        #name: windows/primary_domain_controller
