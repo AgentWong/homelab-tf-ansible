@@ -3,7 +3,6 @@
   hosts: 
   - "{{ pdc_hostname }}"
   - "{{ rdc_hostname }}"
-  verbosity: 4
   tasks:
     - name: Configure PDC DNS
       win_dns_client:
