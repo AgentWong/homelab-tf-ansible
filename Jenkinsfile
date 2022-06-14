@@ -11,7 +11,7 @@ pipeline {
             agent {
                 dockerfile {
                     label 'docker'
-                    filename 'cytopia.dockerfile'
+                    //filename 'cytopia.dockerfile'
                     args '--cap-add=IPC_LOCK \
                     -v /nfs/terraform/state:/project/tfstate:rw \
                     -e VAULT_ADDR=${VAULT_ADDR} -e VAULT_TOKEN=${VAULT_TOKEN} \
@@ -41,7 +41,7 @@ pipeline {
             agent {
                 dockerfile {
                     label 'docker'
-                    filename 'cytopia.dockerfile'
+                    //filename 'cytopia.dockerfile'
                     args '--cap-add=IPC_LOCK \
                     -v /nfs/terraform/state:/project/tfstate:rw \
                     -v /nfs/ansible/inventory:/project/ansible/inventory \
