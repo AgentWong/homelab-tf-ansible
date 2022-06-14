@@ -10,5 +10,5 @@
     msg: "Installing AD. Rebooting..."
     pre_reboot_delay: 15
     reboot_timeout: 600
-    post_reboot_delay: 420
+    post_reboot_delay: 360
   when: ad.changed
