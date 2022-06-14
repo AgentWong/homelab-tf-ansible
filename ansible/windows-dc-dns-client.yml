@@ -3,6 +3,7 @@
   hosts: 
   - "{{ pdc_hostname }}"
   - "{{ rdc_hostname }}"
+  verbosity: 4
   tasks:
     - name: Configure PDC DNS
       win_dns_client:
@@ -12,8 +13,6 @@
         - "{{ hostvars[pdc_hostname]['ansible_host'] }}"
         - 127.0.0.1
       when: inventory_hostname == pdc_hostname
-      async: 120
-      poll: 5
     - name: Configure RDC DNS
       win_dns_client:
         adapter_names: '*'
@@ -22,5 +21,3 @@
         - "{{ hostvars[rdc_hostname]['ansible_host'] }}"
         - 127.0.0.1
       when: inventory_hostname == rdc_hostname
-      async: 120
-      poll: 5
