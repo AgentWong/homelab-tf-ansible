@@ -4,7 +4,7 @@ RUN apk add --no-cache terraform python3 py3-setuptools ansible bash krb5 krb5-p
     wget -q https://github.com/gruntwork-io/terragrunt/releases/download/v0.37.2/terragrunt_linux_amd64 \
     -O /usr/bin/terragrunt && \
     chmod +x /usr/bin/terragrunt && \
-    wget -q https://networkgenomics.com/try/mitogen-0.2.9.tar.gz && \
+    wget -q https://networkgenomics.com/try/mitogen-0.2.9.tar.gz --no-check-certificate && \
     tar -zxvf mitogen-0.2.9.tar.gz -C /opt && \
     pip install --no-cache-dir --upgrade pip setuptools && \
     pip install --no-cache-dir pyvmomi pywinrm pywinrm[kerberos] && \
