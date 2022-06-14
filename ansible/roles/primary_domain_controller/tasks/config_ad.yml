@@ -16,6 +16,8 @@
     replication: forest
     type: primary
     state: present
+  async: 120
+  poll: 5
 
 # The second execution is needed because otherwise the variable only contains 'path' value and not 'ou'
 - name: Poll EDEN Computers
@@ -33,6 +35,8 @@
 - name: Redirect default computers
   win_shell: "redircmp '{{  eden_computers_ou['ou']['DistinguishedName']  }}'"
   when: init_eden_computers_ou.changed
+  async: 120
+  poll: 5
   
 - name: Redirect default users
   win_shell: "redirusr '{{  eden_users_ou['ou']['DistinguishedName']  }}'"
@@ -47,3 +51,5 @@
     groups: 
       - Domain Admins
       - Enterprise Admins
+  async: 120
+  poll: 5

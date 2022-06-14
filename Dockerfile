@@ -8,6 +8,7 @@ RUN apk add --no-cache terraform python3 py3-setuptools ansible-core bash krb5 k
     pip install --no-cache-dir pyvmomi pywinrm pywinrm[kerberos] && \
     pip install --no-cache-dir --upgrade git+https://github.com/vmware/vsphere-automation-sdk-python.git && \
     ansible-galaxy collection install community.windows && \
+    ansible-galaxy collection install community.vmware && \
     apk del temporary && \
     rm -rf /root/.cache/pip
 RUN adduser -D -g "" -h /home/ubuntu \
