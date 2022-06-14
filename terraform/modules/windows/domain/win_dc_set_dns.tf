@@ -1,8 +1,8 @@
 resource "null_resource" "set_dc_dns" {
-  provisioner "local-exec" {
-    triggers = {
+  triggers = {
       id = vsphere_virtual_machine.rdc.id
     }
+  provisioner "local-exec" {
     command = templatefile("${var.template_file}", { 
       sleep = "",
       change_dir = var.change_dir, 
