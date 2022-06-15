@@ -1,7 +1,4 @@
 ---
-- name: Debug user
-  debug:
-    var: ansible_user
 - name: Create Temp path
   win_file:
     path: C:\Temp
@@ -44,7 +41,7 @@
     OverwriteExistingCAinDS: true
     OutputCertRequestFile: 'C:\Windows\System32\CertSrv\CertEnroll\{{  sub_ca_hostname  }}.req'
     Credential_username: '{{  domain_admin  }}'
-    Credential_password: '{{  domain_admin_password  }}'
+    Credential_password: '{{  ansible_password  }}'
 - name: Fetch req file
   fetch:
     src: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_ca_hostname  }}.req"
