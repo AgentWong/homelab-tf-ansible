@@ -8,4 +8,3 @@
     src: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  root_ca_common_name  }}.crl"
     dest: "/tmp/{{  root_ca_common_name  }}.crl"
     flat: yes
-  notify: install_configure_sub_ca
