@@ -29,8 +29,7 @@
       If ($SubmitResult -notlike 'Certificate issued.*') {
         Throw 'Unexpected result issuing SubCA request.'
       }
-        [String]$RetrieveResult = Certreq.exe -Retrieve $RequestId C:\Windows\System32\CertSrv\CertEnroll\$SubCACRTName.crt
-      }
+      Certreq.exe -Retrieve $RequestId C:\Windows\System32\CertSrv\CertEnroll\$SubCACRTName.crt
     parameters:
       SubCAHostname: "{{  sub_ca_hostname  }}"
       SubCACRTName: "{{  sub_ca_crt_name  }}"
