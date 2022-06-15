@@ -1,4 +1,7 @@
 ---
+- name: Debug user
+  debug:
+    var: ansible_user
 - name: Create Temp path
   win_file:
     path: C:\Temp
