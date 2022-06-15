@@ -11,6 +11,7 @@ RUN apk add --no-cache terraform python3 py3-setuptools ansible-core bash krb5 k
     ansible-galaxy collection install community.windows -p /usr/share/ansible/collections && \
     ansible-galaxy collection install community.vmware -p /usr/share/ansible/collections && \
     ansible-galaxy collection install ansible.posix -p /usr/share/ansible/collections && \
+    ansible-galaxy collection install ansible.windows -p /usr/share/ansible/collections && \
     apk del temporary && \
     rm -rf /root/.cache/pip
 RUN adduser -D -g "" -h /home/ubuntu \
