@@ -1,8 +1,8 @@
 ---
 - name: Copy Sub CA certificate
   win_copy:
-    src: "/tmp/{{  sub_ca_crt_name  }}.crt.crt"
-    dest: 'C:\Windows\System32\CertSrv\CertEnroll\{{  sub_ca_crt_name  }}.crt.crt'
+    src: "/tmp/{{  sub_ca_crt_name  }}.crt"
+    dest: 'C:\Windows\System32\CertSrv\CertEnroll\{{  sub_ca_crt_name  }}.crt'
 - name: Register Sub CA Certificate
   win_shell: 'certutil.exe -installCert "C:\Windows\System32\CertSrv\CertEnroll\{{  sub_ca_crt_name  }}.crt"'
 - name: Configure Sub CA settings
