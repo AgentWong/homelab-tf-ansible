@@ -6,7 +6,7 @@
 - name: Check whether crt exists
   win_stat:
     path: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_ca_crt_name  }}.crt"
-  register: init_sub_req
+  register: init_sub_crt
 - name: Accept cert req
   win_shell: |
     Certreq.exe -Config "{{ root_ca_hostname }}\{{ root_ca_common_name }}" -Submit C:\Windows\System32\CertSrv\CertEnroll\{{ sub_ca_hostname }}.req
