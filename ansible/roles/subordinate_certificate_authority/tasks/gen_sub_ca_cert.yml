@@ -12,22 +12,18 @@
     script: |
       $SubCAHostname = {{  sub_ca_hostname  }}
       $SubCACRTName = {{  sub_ca_crt_name  }}
-      Write-Verbose "Submitting C:\Windows\System32\CertSrv\CertEnroll\${SubCAHostname}.req"
-      [String]$RequestResult = "Certreq.exe" -Submit "C:\Windows\System32\CertSrv\CertEnroll\${SubCAHostname}.req"
+      [String]$RequestResult = Certreq.exe -Submit C:\Windows\System32\CertSrv\CertEnroll\$SubCAHostname.req
       $Matches = [Regex]::Match($RequestResult, 'RequestId:\s([0-9]*)')
       If ($Matches.Groups.Count -lt 2) {
-          Write-Verbose "Error getting Request ID from SubCA certificate submission."
-          Throw "Error getting Request ID from SubCA certificate submission."
+          Throw 'Error getting Request ID from SubCA certificate submission.'
       }
       [int]$RequestId = $Matches.Groups[1].Value
       Write-Verbose "Issuing $RequestId"
       [String]$SubmitResult =  "CertUtil.exe" -Resubmit $RequestId
       If ($SubmitResult -notlike 'Certificate issued.*') {
-          Write-Verbose "Unexpected result issuing SubCA request."
-          Throw "Unexpected result issuing SubCA request."
+          Throw 'Unexpected result issuing SubCA request.''
       }
-      Write-Verbose "Retrieving C:\Windows\System32\CertSrv\CertEnroll\${SubCAHostname}.req"
-      [String]$RetrieveResult = "Certreq.exe" -Retrieve $RequestId "C:\Windows\System32\CertSrv\CertEnroll\${SubCACRTName}.crt"
+      [String]$RetrieveResult = Certreq.exe -Retrieve $RequestId C:\Windows\System32\CertSrv\CertEnroll\$SubCACRTName.crt
       }
   when: not init_sub_crt.stat.exists
 - name: Check whether crt exists after
