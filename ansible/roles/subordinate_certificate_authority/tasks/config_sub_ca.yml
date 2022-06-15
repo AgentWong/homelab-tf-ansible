@@ -1,67 +1,49 @@
 ---
-- name: RootCA tasks
-  block:
-  - name: Fetch Root CA CRT File
-    fetch:
-      src: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  root_ca_crt_name  }}.crt"
-      dest: "/tmp/{{  root_ca_crt_name  }}.crt"
-      flat: yes
-  - name: Fetch Root CA CRL File
-    fetch:
-      src: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  root_ca_common_name  }}.crl"
-      dest: "/tmp/{{  root_ca_common_name  }}.crl"
-      flat: yes
-  when: inventory_hostname == root_ca_hostname
-- name: SubCA tasks
-  block:
-  - name: Create Temp path
-    win_file:
-      path: C:\Temp
-      state: directory
-  - name: Create CertEnroll path
-    win_file:
-      path: C:\Windows\System32\CertSrv\CertEnroll
-      state: directory
-  - name: Copy Root CA CRT File
-    win_copy:
-      src: "/tmp/{{  root_ca_crt_name  }}.crt"
-      dest: 'C:\Windows\System32\CertSrv\CertEnroll\{{  root_ca_crt_name  }}.crt'
-    register: root_ca_crt_copy
-  - name: Copy Root CA CRL File
-    win_copy:
-      src: "/tmp/{{  root_ca_common_name  }}.crl"
-      dest: 'C:\Windows\System32\CertSrv\CertEnroll\{{  root_ca_common_name  }}.crl'
-    register: root_ca_crl_copy
-  - name: Register Root CA CRT in AD
-    win_shell: certutil.exe -f -dspublish "C:\Windows\System32\CertSrv\CertEnroll\{{  root_ca_crt_name  }}.crt" RootCA
-    when: root_ca_crt_copy.changed
-  - name: Register Root CA CRL in AD
-    win_shell: certutil.exe -f -dspublish "C:\Windows\System32\CertSrv\CertEnroll\{{  root_ca_common_name  }}.crl"
-    when: root_ca_crl_copy.changed
-  - name: Install Root CA CRT certificate
-    win_certificate_store:
-      path: 'C:\Windows\System32\CertSrv\CertEnroll\{{  root_ca_crt_name  }}.crt'
-      state: present
-      store_name: Root
-  - name: Install Root CA CRL certificate
-    win_shell: 'certutil.exe -addstore -f root C:\Windows\System32\CertSrv\CertEnroll\{{  root_ca_common_name  }}.crl'
-  - name: Configure CA as Enterprise Subordinate
-    win_dsc:
-      resource_name: ADCSCertificationAuthority
-      Ensure: Present
-      IsSingleInstance: 'Yes'
-      CAType: EnterpriseSubordinateCA
-      CACommonName: "{{ sub_ca_common_name  }}"
-      CADistinguishedNameSuffix: "{{ domain_dn }}"
-      OverwriteExistingCAinDS: true
-      OutputCertRequestFile: 'C:\Windows\System32\CertSrv\CertEnroll\{{  sub_ca_hostname  }}.req'
-      Credential_username: '{{  domain_admin  }}'
-      Credential_password: '{{  domain_admin_password  }}'
-  - name: Fetch req file
-    fetch:
-      src: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_ca_hostname  }}.req"
-      dest: "/tmp/{{  sub_ca_hostname  }}.req"
-      flat: yes
-    notify:
-    - gen_sub_ca_on_root
-  when: inventory_hostname == sub_ca_hostname
+- name: Create Temp path
+  win_file:
+    path: C:\Temp
+    state: directory
+- name: Create CertEnroll path
+  win_file:
+    path: C:\Windows\System32\CertSrv\CertEnroll
+    state: directory
+- name: Copy Root CA CRT File
+  win_copy:
+    src: "/tmp/{{  root_ca_crt_name  }}.crt"
+    dest: 'C:\Windows\System32\CertSrv\CertEnroll\{{  root_ca_crt_name  }}.crt'
+  register: root_ca_crt_copy
+- name: Copy Root CA CRL File
+  win_copy:
+    src: "/tmp/{{  root_ca_common_name  }}.crl"
+    dest: 'C:\Windows\System32\CertSrv\CertEnroll\{{  root_ca_common_name  }}.crl'
+  register: root_ca_crl_copy
+- name: Register Root CA CRT in AD
+  win_shell: certutil.exe -f -dspublish "C:\Windows\System32\CertSrv\CertEnroll\{{  root_ca_crt_name  }}.crt" RootCA
+  when: root_ca_crt_copy.changed
+- name: Register Root CA CRL in AD
+  win_shell: certutil.exe -f -dspublish "C:\Windows\System32\CertSrv\CertEnroll\{{  root_ca_common_name  }}.crl"
+  when: root_ca_crl_copy.changed
+- name: Install Root CA CRT certificate
+  win_certificate_store:
+    path: 'C:\Windows\System32\CertSrv\CertEnroll\{{  root_ca_crt_name  }}.crt'
+    state: present
+    store_name: Root
+- name: Install Root CA CRL certificate
+  win_shell: 'certutil.exe -addstore -f root C:\Windows\System32\CertSrv\CertEnroll\{{  root_ca_common_name  }}.crl'
+- name: Configure CA as Enterprise Subordinate
+  win_dsc:
+    resource_name: ADCSCertificationAuthority
+    Ensure: Present
+    IsSingleInstance: 'Yes'
+    CAType: EnterpriseSubordinateCA
+    CACommonName: "{{ sub_ca_common_name  }}"
+    CADistinguishedNameSuffix: "{{ domain_dn }}"
+    OverwriteExistingCAinDS: true
+    OutputCertRequestFile: 'C:\Windows\System32\CertSrv\CertEnroll\{{  sub_ca_hostname  }}.req'
+    Credential_username: '{{  domain_admin  }}'
+    Credential_password: '{{  domain_admin_password  }}'
+- name: Fetch req file
+  fetch:
+    src: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_ca_hostname  }}.req"
+    dest: "/tmp/{{  sub_ca_hostname  }}.req"
+    flat: yes

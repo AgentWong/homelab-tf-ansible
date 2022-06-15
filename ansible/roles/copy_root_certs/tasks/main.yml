@@ -1,0 +1,2 @@
+- name: Copy root certs
+  include_tasks: copy_root_certs.yml

@@ -39,5 +39,3 @@
     src: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_ca_crt_name  }}.crt"
     dest: "/tmp/{{  sub_ca_crt_name  }}.crt"
   when: post_sub_crt.stat.exists
-  notify:
-  - finish_config_sub_ca
