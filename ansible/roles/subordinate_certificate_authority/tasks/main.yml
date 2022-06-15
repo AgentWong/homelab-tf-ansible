@@ -3,4 +3,3 @@
   when: inventory_hostname == sub_ca_hostname
 - name: Configure Sub CA
   include_tasks: config_sub_ca.yml
-  when: inventory_hostname == sub_ca_hostname
