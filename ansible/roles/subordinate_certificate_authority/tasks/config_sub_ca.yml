@@ -3,10 +3,6 @@
   win_file:
     path: C:\Temp
     state: directory
-- name: Copy PSExec
-  win_copy:
-    src: "PsExec.exe"
-    dest: 'C:\Temp\PsExec.exe'
 - name: Create CertEnroll path
   win_file:
     path: C:\Windows\System32\CertSrv\CertEnroll
@@ -22,22 +18,10 @@
     dest: 'C:\Windows\System32\CertSrv\CertEnroll\{{  root_ca_common_name  }}.crl'
   register: root_ca_crl_copy
 - name: Register Root CA CRT in AD
-  win_psexec: 
-    command: certutil.exe -f -dspublish "C:\Windows\System32\CertSrv\CertEnroll\{{  root_ca_crt_name  }}.crt" RootCA
-    executable: C:\Temp\PsExec.exe
-    elevated: yes
-    nobanner: yes
-    username: "{{  psexec_user  }}"
-    password: "{{ domain_admin_password  }}"
+  win_shell: certutil.exe -f -dspublish "C:\Windows\System32\CertSrv\CertEnroll\{{  root_ca_crt_name  }}.crt" RootCA
   when: root_ca_crt_copy.changed
 - name: Register Root CA CRL in AD
-  win_psexec: 
-    command: certutil.exe -f -dspublish "C:\Windows\System32\CertSrv\CertEnroll\{{  root_ca_common_name  }}.crl"
-    executable: C:\Temp\PsExec.exe
-    elevated: yes
-    nobanner: yes
-    username: "{{  psexec_user  }}"
-    password: "{{ domain_admin_password  }}"
+  win_shell: certutil.exe -f -dspublish "C:\Windows\System32\CertSrv\CertEnroll\{{  root_ca_common_name  }}.crl"
   when: root_ca_crl_copy.changed
 - name: Install Root CA CRT certificate
   win_certificate_store:

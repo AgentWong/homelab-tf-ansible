@@ -55,7 +55,11 @@ pipeline {
                 dir('ansible/inventory'){
                     sh "cp /project/ansible/inventory/homelab.vmware.yml ."
                 }
-                dir('terraform/dev/ad'){
+                dir('terraform/dev/windows/ad'){
+                    sh "terragrunt validate"
+                    sh "terragrunt apply -auto-approve"
+                }
+                dir('terraform/dev/windows/ca'){
                     sh "terragrunt validate"
                     sh "terragrunt apply -auto-approve"
                 }

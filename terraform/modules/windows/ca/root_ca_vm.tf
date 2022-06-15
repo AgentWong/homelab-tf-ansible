@@ -3,30 +3,30 @@
 # Root CA
 resource "vsphere_virtual_machine" "root_ca" {
   name             = var.root_name
-  resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
-  datastore_id     = data.vsphere_datastore.datastore.id
-  firmware         = data.vsphere_virtual_machine.template.firmware
+  resource_pool_id = var.resource_pool_id
+  datastore_id     = var.datastore_id
+  firmware         = var.vm_firmware
   num_cpus         = 2
   memory           = 4096
-  guest_id         = data.vsphere_virtual_machine.template.guest_id
+  guest_id         = var.guest_id
   network_interface {
-    network_id   = data.vsphere_network.network.id
-    adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
+    network_id   = var.network_id
+    adapter_type = var.vm_net_interface_type
   }
   disk {
     label            = "disk0"
-    size             = data.vsphere_virtual_machine.template.disks.0.size
-    eagerly_scrub    = data.vsphere_virtual_machine.template.disks.0.eagerly_scrub
-    thin_provisioned = data.vsphere_virtual_machine.template.disks.0.thin_provisioned
+    size             = var.disk_size
+    eagerly_scrub    = var.disk_eagerly_scrub
+    thin_provisioned = var.disk_thin_provisioned
   }
-  scsi_type = data.vsphere_virtual_machine.template.scsi_type
+  scsi_type = var.scsi_type
 
   clone {
-    template_uuid = data.vsphere_virtual_machine.template.id
+    template_uuid = var.template_id
     customize {
       windows_options {
         computer_name    = var.root_name
-        admin_password   = var.admin_password
+        admin_password   = data.vault_generic_secret.password.data["password"]
         workgroup        = "WORKGROUP"
         auto_logon       = true
         auto_logon_count = 1
@@ -43,21 +43,13 @@ resource "vsphere_virtual_machine" "root_ca" {
   }
 
   provisioner "local-exec" {
-    command = <<EOT
-      exit_test () {
-        RED='\033[0;31m' # Red Text
-        GREEN='\033[0;32m' # Green Text
-        BLUE='\033[0;34m' # Blue Text
-        NC='\033[0m' # No Color
-        if [ $1 -eq 0 ]; then
-          printf "\n $GREEN Playbook Succeeded $NC \n"
-        else
-          printf "\n $RED Failed Playbook $NC \n" >&2
-          exit 1
-        fi
-      }
-      cd ${var.change_dir}
-      ansible-playbook --extra-vars 'root_ca_hostname=${var.root_name}' ${var.root_ansible_playbook}; exit_test $?
-      EOT
+    command = templatefile("${var.template_file}", { 
+      sleep = ""
+      change_dir = var.change_dir, 
+      ansible_user = "ansible_user=administrator"
+      password = nonsensitive(data.vault_generic_secret.password.data["password"]),
+      extra_args = "root_ca_hostname=${var.root_name}. ansible_winrm_transport=ntlm",
+      ansible_playbook = var.root_ansible_playbook
+      })
   }
 }

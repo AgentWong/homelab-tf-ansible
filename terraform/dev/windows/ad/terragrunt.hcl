@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "../../modules//windows/domain"
+  source = "../../../modules//windows/domain"
 
   extra_arguments "custom_vars" {
     commands = [
@@ -18,10 +18,10 @@ terraform {
   }
 }
 dependency "vsphere_base" {
-  config_path = "../vsphere/base"
+  config_path = "../../vsphere/base"
 }
 dependency "windows_vm_template" {
-  config_path = "../vsphere/windows"
+  config_path = "../../vsphere/windows"
 }
 
 inputs = {

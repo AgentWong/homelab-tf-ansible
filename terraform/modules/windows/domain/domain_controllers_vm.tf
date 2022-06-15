@@ -47,7 +47,7 @@ resource "vsphere_virtual_machine" "pdc" {
     command = templatefile("${var.template_file}", { 
       sleep = ""
       change_dir = var.change_dir, 
-      ansible_user = "administrator"
+      ansible_user = "ansible_user=administrator"
       password = nonsensitive(data.vault_generic_secret.password.data["password"]),
       extra_args = "pdc_hostname=${var.pdc_name}. ansible_winrm_transport=ntlm",
       ansible_playbook = var.pdc_ansible_playbook
@@ -104,7 +104,7 @@ resource "vsphere_virtual_machine" "rdc" {
     command = templatefile("${var.template_file}", { 
       sleep = "sleep 30s"
       change_dir = var.change_dir, 
-      ansible_user = "${var.domain_admin_user}@EDEN.LOCAL"
+      ansible_user = "ansible_user=${var.domain_admin_user}@EDEN.LOCAL"
       password = nonsensitive(data.vault_generic_secret.password.data["password"]),
       extra_args = "pdc_hostname=${var.pdc_name}.${var.join_domain} rdc_hostname=${var.rdc_name}.${var.join_domain}",
       ansible_playbook = var.rdc_ansible_playbook
