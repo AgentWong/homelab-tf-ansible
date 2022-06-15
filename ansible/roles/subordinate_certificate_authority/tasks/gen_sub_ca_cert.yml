@@ -3,10 +3,10 @@
   win_copy:
     src: "/tmp/{{  sub_ca_hostname  }}.req"
     dest: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_ca_hostname  }}.req"
-- name: Check whether crt exists
+- name: Check whether req exists
   win_stat:
-    path: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_ca_crt_name  }}.crt"
-  register: init_sub_crt
+    path: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_ca_crt_name  }}.req"
+  register: init_sub_req
 - name: Accept cert req
   ansible.windows.win_powershell:
     script: |
@@ -34,7 +34,7 @@
     parameters:
       SubCAHostname: "{{  sub_ca_hostname  }}"
       SubCACRTName: "{{  sub_ca_crt_name  }}"
-  when: not init_sub_crt.stat.exists
+  when: not init_sub_req.stat.exists
 - name: Check whether crt exists after
   win_stat:
     path: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_ca_crt_name  }}.crt"
