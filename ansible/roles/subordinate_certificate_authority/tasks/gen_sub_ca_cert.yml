@@ -8,7 +8,7 @@
     path: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_ca_crt_name  }}.crt"
   register: init_sub_crt
 - name: Accept cert req
-  win_powershell:
+  community.windows.win_powershell:
     script: |
       $SubCAHostname = {{  sub_hostname  }}
       $SubCACRTName = {{  sub_ca_crt_name  }}
