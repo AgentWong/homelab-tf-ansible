@@ -21,12 +21,13 @@
       [String]$RequestResult = Certreq.exe -Submit C:\Windows\System32\CertSrv\CertEnroll\$SubCAHostname.req
       $Matches = [Regex]::Match($RequestResult, 'RequestId:\s([0-9]*)')
       If ($Matches.Groups.Count -lt 2) {
+        $Ansible.failed = true
         Throw 'Error getting Request ID from SubCA certificate submission.'
       }
       [int]$RequestId = $Matches.Groups[1].Value
-      Write-Verbose "Issuing $RequestId"
       [String]$SubmitResult =  CertUtil.exe -Resubmit $RequestId
       If ($SubmitResult -notlike 'Certificate issued.*') {
+        $Ansible.failed = true
         Throw 'Unexpected result issuing SubCA request.'
       }
       Certreq.exe -Retrieve $RequestId C:\Windows\System32\CertSrv\CertEnroll\$SubCACRTName.crt
