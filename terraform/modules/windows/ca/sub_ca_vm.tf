@@ -46,7 +46,7 @@ resource "vsphere_virtual_machine" "sub_ca" {
 
   provisioner "local-exec" {
     command = templatefile("${var.template_file}", { 
-      sleep = ""
+      sleep = "sleep 30s"
       change_dir = var.change_dir, 
       ansible_user = ""
       password = nonsensitive(data.vault_generic_secret.password.data["password"]),
