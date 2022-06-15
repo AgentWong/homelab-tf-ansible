@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "../../../modules//windows/domain"
+  source = "../../../modules//windows/ca"
 
   extra_arguments "custom_vars" {
     commands = [
