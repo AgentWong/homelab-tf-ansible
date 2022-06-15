@@ -50,7 +50,7 @@ resource "vsphere_virtual_machine" "sub_ca" {
       change_dir = var.change_dir, 
       ansible_user = ""
       password = nonsensitive(data.vault_generic_secret.password.data["password"]),
-      extra_args = "root_ca_hostname=${var.root_name}. sub_ca_hostname=${var.sub_name}.${join_domain}",
+      extra_args = "root_ca_hostname=${var.root_name}. sub_ca_hostname=${var.sub_name}.${var.join_domain}",
       ansible_playbook = var.sub_ansible_playbook
       })
   }
