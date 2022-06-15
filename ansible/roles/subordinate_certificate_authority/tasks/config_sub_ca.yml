@@ -49,4 +49,3 @@
     flat: yes
   notify:
   - gen_sub_ca_on_root
-  - finish_config_sub_ca

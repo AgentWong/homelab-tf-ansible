@@ -1,6 +1,0 @@
-root_ca_name: EDEN-ROOT-CA
-root_ca_common_name: "{{  domain  }}-Root-CA"
-root_ca_crt_name: "{{  root_ca_name  }}_{{  domain  }}-Root-CA"
-sub_ca_name: EDEN-CA-01
-sub_ca_common_name: "{{ domain }}-Issuing-CA"
-sub_ca_crt_name: "{{  sub_ca_name  }}_{{  domain  }}-Issuing-CA"
