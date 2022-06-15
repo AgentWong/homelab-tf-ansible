@@ -8,32 +8,18 @@
     path: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_ca_crt_name  }}.req"
   register: init_sub_req
 - name: Accept cert req
-  ansible.windows.win_powershell:
-    script: |
-      [CmdletBinding()]
-      param (
-          [String]
-          $SubCAHostname,
-
-          [String]
-          $SubCACRTName
-      )
-      [String]$RequestResult = Certreq.exe -Submit C:\Windows\System32\CertSrv\CertEnroll\$SubCAHostname.req
-      $Matches = [Regex]::Match($RequestResult, 'RequestId:\s([0-9]*)')
-      If ($Matches.Groups.Count -lt 2) {
-        $Ansible.failed = true
-        Throw 'Error getting Request ID from SubCA certificate submission.'
-      }
-      [int]$RequestId = $Matches.Groups[1].Value
-      [String]$SubmitResult =  CertUtil.exe -Resubmit $RequestId
-      If ($SubmitResult -notlike 'Certificate issued.*') {
-        $Ansible.failed = true
-        Throw 'Unexpected result issuing SubCA request.'
-      }
-      Certreq.exe -Retrieve $RequestId C:\Windows\System32\CertSrv\CertEnroll\$SubCACRTName.crt
-    parameters:
-      SubCAHostname: "{{  sub_ca_hostname  }}"
-      SubCACRTName: "{{  sub_ca_crt_name  }}"
+  win_shell: |
+    [String]$RequestResult = Certreq.exe -Submit C:\Windows\System32\CertSrv\CertEnroll\{{ sub_ca_hostname }}.req
+    $Matches = [Regex]::Match($RequestResult, 'RequestId:\s([0-9]*)')
+    If ($Matches.Groups.Count -lt 2) {
+      Throw 'Error getting Request ID from SubCA certificate submission.'
+    }
+    [int]$RequestId = $Matches.Groups[1].Value
+    [String]$SubmitResult =  CertUtil.exe -Resubmit $RequestId
+    If ($SubmitResult -notlike 'Certificate issued.*') {
+      Throw 'Unexpected result issuing SubCA request.'
+    }
+    Certreq.exe -Retrieve $RequestId C:\Windows\System32\CertSrv\CertEnroll\{{ sub_ca_crt_name }}.crt
   when: not init_sub_req.stat.exists
 - name: Check whether crt exists after
   win_stat:
