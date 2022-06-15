@@ -1,8 +1,8 @@
 ---
 - name: Copy req file to Root CA
   win_copy:
-    src: "/tmp/{{  sub_hostname  }}.req"
-    dest: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_hostname  }}.req"
+    src: "/tmp/{{  sub_ca_hostname  }}.req"
+    dest: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_ca_hostname  }}.req"
 - name: Check whether crt exists
   win_stat:
     path: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_ca_crt_name  }}.crt"
@@ -10,7 +10,7 @@
 - name: Accept cert req
   ansible.windows.win_powershell:
     script: |
-      $SubCAHostname = {{  sub_hostname  }}
+      $SubCAHostname = {{  sub_ca_hostname  }}
       $SubCACRTName = {{  sub_ca_crt_name  }}
       Write-Verbose "Submitting C:\Windows\System32\CertSrv\CertEnroll\${SubCAHostname}.req"
       [String]$RequestResult = "Certreq.exe" -Submit "C:\Windows\System32\CertSrv\CertEnroll\${SubCAHostname}.req"
