@@ -10,7 +10,7 @@
 - name: Accept cert req
   win_shell: |
     Certreq.exe -Config "{{ root_ca_hostname }}\{{ root_ca_common_name }}" -Submit C:\Windows\System32\CertSrv\CertEnroll\{{ sub_ca_hostname }}.req
-    certutil.exe -resubmit 3
+    certutil.exe -resubmit 2
     Certreq.exe -f -Config "{{ root_ca_hostname }}\{{ root_ca_common_name }}" -Retrieve 2 C:\Windows\System32\CertSrv\CertEnroll\{{ sub_ca_crt_name }}.crt
   when: not init_sub_crt.stat.exists
 - name: Check whether crt exists after
