@@ -10,8 +10,14 @@
 - name: Accept cert req
   ansible.windows.win_powershell:
     script: |
-      $SubCAHostname = {{  sub_ca_hostname  }}
-      $SubCACRTName = {{  sub_ca_crt_name  }}
+      [CmdletBinding()]
+      param (
+          [String]
+          $SubCAHostname,
+
+          [String]
+          $SubCACRTName
+      )
       [String]$RequestResult = Certreq.exe -Submit C:\Windows\System32\CertSrv\CertEnroll\$SubCAHostname.req
       $Matches = [Regex]::Match($RequestResult, 'RequestId:\s([0-9]*)')
       If ($Matches.Groups.Count -lt 2) {
@@ -25,6 +31,9 @@
       }
         [String]$RetrieveResult = Certreq.exe -Retrieve $RequestId C:\Windows\System32\CertSrv\CertEnroll\$SubCACRTName.crt
       }
+  parameters:
+    SubCAHostname: "{{  sub_ca_hostname  }}"
+    SubCACRTName: "{{  sub_ca_crt_name  }}"
   when: not init_sub_crt.stat.exists
 - name: Check whether crt exists after
   win_stat:
