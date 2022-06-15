@@ -21,4 +21,5 @@
   fetch:
     src: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_ca_crt_name  }}.crt"
     dest: "/tmp/{{  sub_ca_crt_name  }}.crt"
+    flat: yes
   when: post_sub_crt.stat.exists
