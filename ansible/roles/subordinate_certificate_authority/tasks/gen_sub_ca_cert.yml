@@ -31,9 +31,9 @@
       }
         [String]$RetrieveResult = Certreq.exe -Retrieve $RequestId C:\Windows\System32\CertSrv\CertEnroll\$SubCACRTName.crt
       }
-  parameters:
-    SubCAHostname: "{{  sub_ca_hostname  }}"
-    SubCACRTName: "{{  sub_ca_crt_name  }}"
+    parameters:
+      SubCAHostname: "{{  sub_ca_hostname  }}"
+      SubCACRTName: "{{  sub_ca_crt_name  }}"
   when: not init_sub_crt.stat.exists
 - name: Check whether crt exists after
   win_stat:
