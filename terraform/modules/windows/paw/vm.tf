@@ -9,6 +9,8 @@ resource "vsphere_virtual_machine" "paw" {
   num_cpus         = 2
   memory           = 4096
   guest_id         = var.guest_id
+  wait_for_guest_net_timeout = 10
+  wait_for_guest_ip_timeout = 10
   network_interface {
     network_id   = var.network_id
     adapter_type = var.vm_net_interface_type
