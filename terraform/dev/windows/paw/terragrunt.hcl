@@ -50,8 +50,8 @@ inputs = {
   template_file = "${get_parent_terragrunt_dir()}/../templates/run_playbook.tftpl"
 
   # PAW vars
-  root_ipv4_address     = "192.168.50.101"
-  root_dns_server_list  = ["192.168.50.71", "192.168.50.72"]
-  root_ansible_playbook = "windows-setup-paw.yml"
-  root_name             = "EDEN-PAW-01"
+  ipv4_address     = "192.168.50.101"
+  dns_server_list  = ["192.168.50.71", "192.168.50.72"]
+  ansible_playbook = "windows-setup-paw.yml"
+  name             = "EDEN-PAW-01"
 }
