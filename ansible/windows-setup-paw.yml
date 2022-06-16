@@ -1,0 +1,33 @@
+---
+- hosts:
+    - "{{ hostname }}"
+  tasks:
+  - name: Install RSAT Tools
+    win_shell: Get-WindowsCapability -Name RSAT* -Online | Add-WindowsCapability -Online
+  - name: Make Temp Dir
+    win_file:
+      path: C:\Temp
+      state: directory
+  - name: Download System CLR Types
+    win_get_url:
+      url: https://go.microsoft.com/fwlink/?LinkID=239644&clcid=0x409
+      dest: C:\Temp\SQLSysClrTypes.msi
+  - name: Install System CLR Types
+    win_package:
+      path: C:\Temp\SQLSysClrTypes.msi
+      state: present
+  - name: Download Report Viewer
+    win_get_url:
+      url: https://www.microsoft.com/en-us/download/confirmation.aspx?id=35747
+      dest: C:\Temp\ReportViewer.msi
+  - name: Install Report Viewer
+    win_package:
+      path: C:\Temp\ReportViewer.msi
+      state: present
+  - name: Cleanup files
+    win_file:
+      path: "{{ item }}"
+      state: absent
+    loop:
+    - C:\Temp\SQLSysClrTypes.msi
+    - C:\Temp\ReportViewer.msi
