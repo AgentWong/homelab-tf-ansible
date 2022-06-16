@@ -30,11 +30,6 @@ resource "vsphere_virtual_machine" "paw" {
         join_domain           = var.join_domain
         domain_admin_user     = var.domain_admin_user
         domain_admin_password = data.vault_generic_secret.password.data["password"]
-        auto_logon            = true
-        auto_logon_count      = 1
-        run_once_command_list = ["cmd.exe /c powershell.exe Invoke-WebRequest -Uri https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1 -UseBasicParsing -OutFile C:\\Windows\\Temp\\ConfigureRemotingForAnsible.ps1",
-          "cmd.exe /c powershell.exe -ExecutionPolicy Bypass -File C:\\Windows\\Temp\\ConfigureRemotingForAnsible.ps1"
-        ]
       }
       network_interface {
         ipv4_address    = var.ipv4_address
