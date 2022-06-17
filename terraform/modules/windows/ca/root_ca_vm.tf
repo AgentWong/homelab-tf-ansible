@@ -3,7 +3,7 @@
 # Root CA
 resource "vsphere_virtual_machine" "root_ca" {
   name                 = var.root_name
-  tools_upgrade_policy = upgradeAtPowerCycle
+  tools_upgrade_policy = "upgradeAtPowerCycle"
   resource_pool_id     = var.resource_pool_id
   datastore_id         = var.datastore_id
   firmware             = var.vm_firmware
