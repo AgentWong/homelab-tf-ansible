@@ -2,13 +2,14 @@
 
 # PAW
 resource "vsphere_virtual_machine" "paw" {
-  name             = var.name
-  resource_pool_id = var.resource_pool_id
-  datastore_id     = var.datastore_id
-  firmware         = var.vm_firmware
-  num_cpus         = 2
-  memory           = 4096
-  guest_id         = var.guest_id
+  name                 = var.name
+  tools_upgrade_policy = upgradeAtPowerCycle
+  resource_pool_id     = var.resource_pool_id
+  datastore_id         = var.datastore_id
+  firmware             = var.vm_firmware
+  num_cpus             = 2
+  memory               = 4096
+  guest_id             = var.guest_id
   network_interface {
     network_id   = var.network_id
     adapter_type = var.vm_net_interface_type
@@ -30,10 +31,10 @@ resource "vsphere_virtual_machine" "paw" {
         join_domain           = var.join_domain
         domain_admin_user     = var.domain_admin_user
         domain_admin_password = data.vault_generic_secret.password.data["password"]
-        auto_logon       = true
-        auto_logon_count = 1
+        auto_logon            = true
+        auto_logon_count      = 1
         run_once_command_list = ["cmd.exe /c powershell.exe Invoke-WebRequest -Uri https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1",
-        "cmd.exe /c powershell.exe -ExecutionPolicy Bypass -File ConfigureRemotingForAnsible.ps1"
+          "cmd.exe /c powershell.exe -ExecutionPolicy Bypass -File ConfigureRemotingForAnsible.ps1"
         ]
       }
       network_interface {

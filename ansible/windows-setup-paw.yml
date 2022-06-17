@@ -3,11 +3,12 @@
     - "{{ hostname }}"
   tasks:
   - name: Install RSAT
-    ansible.windows.win_feature:
+    win_feature:
       name: RSAT
       state: present
       include_sub_features: yes
       include_management_tools: yes
+    register: win_feature
   - name: Make Temp Dir
     win_file:
       path: C:\Temp
@@ -35,3 +36,6 @@
     loop:
     - C:\Temp\SQLSysClrTypes.msi
     - C:\Temp\ReportViewer.msi
+  - name: Reboot if needed
+    win_reboot:
+    when: win_feature.reboot_required

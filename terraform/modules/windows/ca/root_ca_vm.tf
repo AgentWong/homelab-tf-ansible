@@ -2,13 +2,14 @@
 
 # Root CA
 resource "vsphere_virtual_machine" "root_ca" {
-  name             = var.root_name
-  resource_pool_id = var.resource_pool_id
-  datastore_id     = var.datastore_id
-  firmware         = var.vm_firmware
-  num_cpus         = 2
-  memory           = 4096
-  guest_id         = var.guest_id
+  name                 = var.root_name
+  tools_upgrade_policy = upgradeAtPowerCycle
+  resource_pool_id     = var.resource_pool_id
+  datastore_id         = var.datastore_id
+  firmware             = var.vm_firmware
+  num_cpus             = 2
+  memory               = 4096
+  guest_id             = var.guest_id
   network_interface {
     network_id   = var.network_id
     adapter_type = var.vm_net_interface_type
@@ -43,13 +44,13 @@ resource "vsphere_virtual_machine" "root_ca" {
   }
 
   provisioner "local-exec" {
-    command = templatefile("${var.template_file}", { 
-      sleep = ""
-      change_dir = var.change_dir, 
-      ansible_user = "ansible_user=administrator"
-      password = nonsensitive(data.vault_generic_secret.password.data["password"]),
-      extra_args = "root_ca_hostname=${var.root_name}. ansible_winrm_transport=ntlm",
+    command = templatefile("${var.template_file}", {
+      sleep            = ""
+      change_dir       = var.change_dir,
+      ansible_user     = "ansible_user=administrator"
+      password         = nonsensitive(data.vault_generic_secret.password.data["password"]),
+      extra_args       = "root_ca_hostname=${var.root_name}. ansible_winrm_transport=ntlm",
       ansible_playbook = var.root_ansible_playbook
-      })
+    })
   }
 }

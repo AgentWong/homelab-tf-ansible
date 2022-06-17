@@ -2,13 +2,14 @@
 
 # Root CA
 resource "vsphere_virtual_machine" "sub_ca" {
-  name             = var.sub_name
-  resource_pool_id = var.resource_pool_id
-  datastore_id     = var.datastore_id
-  firmware         = var.vm_firmware
-  num_cpus         = 2
-  memory           = 4096
-  guest_id         = var.guest_id
+  name                 = var.sub_name
+  tools_upgrade_policy = upgradeAtPowerCycle
+  resource_pool_id     = var.resource_pool_id
+  datastore_id         = var.datastore_id
+  firmware             = var.vm_firmware
+  num_cpus             = 2
+  memory               = 4096
+  guest_id             = var.guest_id
   network_interface {
     network_id   = var.network_id
     adapter_type = var.vm_net_interface_type
@@ -45,14 +46,14 @@ resource "vsphere_virtual_machine" "sub_ca" {
   }
 
   provisioner "local-exec" {
-    command = templatefile("${var.template_file}", { 
-      sleep = "sleep 30s"
-      change_dir = var.change_dir, 
-      ansible_user = ""
-      password = nonsensitive(data.vault_generic_secret.password.data["password"]),
-      extra_args = "root_ca_hostname=${var.root_name}. sub_ca_hostname=${var.sub_name}.${var.join_domain}",
+    command = templatefile("${var.template_file}", {
+      sleep            = "sleep 30s"
+      change_dir       = var.change_dir,
+      ansible_user     = ""
+      password         = nonsensitive(data.vault_generic_secret.password.data["password"]),
+      extra_args       = "root_ca_hostname=${var.root_name}. sub_ca_hostname=${var.sub_name}.${var.join_domain}",
       ansible_playbook = var.sub_ansible_playbook
-      })
+    })
   }
   depends_on = [
     vsphere_virtual_machine.root_ca
