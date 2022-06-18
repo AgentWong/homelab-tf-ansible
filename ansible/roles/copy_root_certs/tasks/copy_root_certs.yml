@@ -1,0 +1,10 @@
+- name: Fetch Root CA CRT File
+  fetch:
+    src: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  root_ca_crt_name  }}.crt"
+    dest: "/tmp/{{  root_ca_crt_name  }}.crt"
+    flat: yes
+- name: Fetch Root CA CRL File
+  fetch:
+    src: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  root_ca_common_name  }}.crl"
+    dest: "/tmp/{{  root_ca_common_name  }}.crl"
+    flat: yes

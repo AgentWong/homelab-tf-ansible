@@ -2,14 +2,14 @@
 ansible_port: 5985
 ansible_connection: winrm
 ansible_winrm_server_cert_validation: ignore
-ansible_winrm_transport: kerberos
+ansible_winrm_transport: kerberos, ntlm
+ansible_winrm_kerberos_delegation: true
 domain: eden.local
 domain_upper: EDEN.LOCAL
 domain_dn: DC=EDEN, DC=LOCAL
 netbios_domain: eden
 initial_domain_admin: "administrator@{{  domain  }}"
 domain_admin: "radmin@{{  domain  }}"
-psexec_user: 'EDEN\radmin'
 root_ca_name: EDEN-ROOT-CA
 root_ca_common_name: "{{  domain  }}-Root-CA"
 root_ca_crt_name: "{{  root_ca_name  }}_{{  domain  }}-Root-CA"

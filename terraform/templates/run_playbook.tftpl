@@ -14,6 +14,6 @@ fi
 }
 cd ${change_dir}
 ansible-playbook --extra-vars "${extra_args}" \
---extra-vars "ansible_user=${ansible_user} ansible_password=${password} \
+--extra-vars "${ansible_user} ansible_password=${password} \
 password=${password}" \
 ${ansible_playbook}; exit_test $?

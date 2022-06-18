@@ -1,0 +1,2 @@
+- name: Generate Sub CA certs
+  include_tasks: gen_sub_ca_cert.yml

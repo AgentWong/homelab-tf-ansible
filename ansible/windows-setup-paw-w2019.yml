@@ -1,0 +1,41 @@
+---
+- hosts:
+    - "{{ hostname }}"
+  tasks:
+  - name: Install RSAT
+    win_feature:
+      name: RSAT
+      state: present
+      include_sub_features: yes
+      include_management_tools: yes
+    register: win_feature
+  - name: Make Temp Dir
+    win_file:
+      path: C:\Temp
+      state: directory
+  - name: Download System CLR Types
+    win_get_url:
+      url: https://go.microsoft.com/fwlink/?LinkID=239644&clcid=0x409
+      dest: C:\Temp\SQLSysClrTypes.msi
+  - name: Install System CLR Types
+    win_package:
+      path: C:\Temp\SQLSysClrTypes.msi
+      state: present
+  - name: Download Report Viewer
+    win_get_url:
+      url: https://download.microsoft.com/download/F/B/7/FB728406-A1EE-4AB5-9C56-74EB8BDDF2FF/ReportViewer.msi
+      dest: C:\Temp\ReportViewer.msi
+  - name: Install Report Viewer
+    win_package:
+      path: C:\Temp\ReportViewer.msi
+      state: present
+  - name: Cleanup files
+    win_file:
+      path: "{{ item }}"
+      state: absent
+    loop:
+    - C:\Temp\SQLSysClrTypes.msi
+    - C:\Temp\ReportViewer.msi
+  - name: Reboot if needed
+    win_reboot:
+    when: win_feature.reboot_required

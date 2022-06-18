@@ -1,34 +1,17 @@
 ---
 - name: Copy req file to Root CA
   win_copy:
-    src: "/tmp/{{  sub_hostname  }}.req"
-    dest: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_hostname  }}.req"
+    src: "/tmp/{{  sub_ca_hostname  }}.req"
+    dest: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_ca_hostname  }}.req"
 - name: Check whether crt exists
   win_stat:
     path: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_ca_crt_name  }}.crt"
   register: init_sub_crt
 - name: Accept cert req
-  win_powershell:
-    script: |
-      $SubCAHostname = {{  sub_hostname  }}
-      $SubCACRTName = {{  sub_ca_crt_name  }}
-      Write-Verbose "Submitting C:\Windows\System32\CertSrv\CertEnroll\${SubCAHostname}.req"
-      [String]$RequestResult = "Certreq.exe" -Submit "C:\Windows\System32\CertSrv\CertEnroll\${SubCAHostname}.req"
-      $Matches = [Regex]::Match($RequestResult, 'RequestId:\s([0-9]*)')
-      If ($Matches.Groups.Count -lt 2) {
-          Write-Verbose "Error getting Request ID from SubCA certificate submission."
-          Throw "Error getting Request ID from SubCA certificate submission."
-      }
-      [int]$RequestId = $Matches.Groups[1].Value
-      Write-Verbose "Issuing $RequestId"
-      [String]$SubmitResult =  "CertUtil.exe" -Resubmit $RequestId
-      If ($SubmitResult -notlike 'Certificate issued.*') {
-          Write-Verbose "Unexpected result issuing SubCA request."
-          Throw "Unexpected result issuing SubCA request."
-      }
-      Write-Verbose "Retrieving C:\Windows\System32\CertSrv\CertEnroll\${SubCAHostname}.req"
-      [String]$RetrieveResult = "Certreq.exe" -Retrieve $RequestId "C:\Windows\System32\CertSrv\CertEnroll\${SubCACRTName}.crt"
-      }
+  win_shell: |
+    Certreq.exe -Config "{{ root_ca_hostname }}\{{ root_ca_common_name }}" -Submit C:\Windows\System32\CertSrv\CertEnroll\{{ sub_ca_hostname }}.req
+    certutil.exe -resubmit 2
+    Certreq.exe -f -Config "{{ root_ca_hostname }}\{{ root_ca_common_name }}" -Retrieve 2 C:\Windows\System32\CertSrv\CertEnroll\{{ sub_ca_crt_name }}.crt
   when: not init_sub_crt.stat.exists
 - name: Check whether crt exists after
   win_stat:
@@ -38,4 +21,5 @@
   fetch:
     src: "C:\\Windows\\System32\\CertSrv\\CertEnroll\\{{  sub_ca_crt_name  }}.crt"
     dest: "/tmp/{{  sub_ca_crt_name  }}.crt"
+    flat: yes
   when: post_sub_crt.stat.exists

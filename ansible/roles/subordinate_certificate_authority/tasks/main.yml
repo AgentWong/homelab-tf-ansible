@@ -1,6 +1,15 @@
+- name: Copy root certs
+  include_tasks: copy_root_certs.yml
+  when: inventory_hostname == root_ca_hostname
 - name: Install Sub CA
   include_tasks: install_sub_ca.yml
   when: inventory_hostname == sub_ca_hostname
 - name: Configure Sub CA
   include_tasks: config_sub_ca.yml
+  when: inventory_hostname == sub_ca_hostname
+- name: Generate Sub CA certs
+  include_tasks: gen_sub_ca_cert.yml
+  when: inventory_hostname == root_ca_hostname
+- name: Finish Configuring Sub CA
+  include_tasks: finish_config_sub_ca.yml
   when: inventory_hostname == sub_ca_hostname

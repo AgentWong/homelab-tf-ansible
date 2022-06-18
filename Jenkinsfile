@@ -11,6 +11,7 @@ pipeline {
             agent {
                 dockerfile {
                     label 'docker'
+                    //filename 'cytopia.dockerfile'
                     args '--cap-add=IPC_LOCK \
                     -v /nfs/terraform/state:/project/tfstate:rw \
                     -e VAULT_ADDR=${VAULT_ADDR} -e VAULT_TOKEN=${VAULT_TOKEN} \
@@ -40,6 +41,7 @@ pipeline {
             agent {
                 dockerfile {
                     label 'docker'
+                    //filename 'cytopia.dockerfile'
                     args '--cap-add=IPC_LOCK \
                     -v /nfs/terraform/state:/project/tfstate:rw \
                     -v /nfs/ansible/inventory:/project/ansible/inventory \
@@ -53,7 +55,55 @@ pipeline {
                 dir('ansible/inventory'){
                     sh "cp /project/ansible/inventory/homelab.vmware.yml ."
                 }
-                dir('terraform/dev/ad'){
+                dir('terraform/dev/windows/ad'){
+                    sh "terragrunt validate"
+                    sh "terragrunt apply -auto-approve"
+                }
+            }
+        }
+        stage('Deploy Certificate Authority') {
+            agent {
+                dockerfile {
+                    label 'docker'
+                    //filename 'cytopia.dockerfile'
+                    args '--cap-add=IPC_LOCK \
+                    -v /nfs/terraform/state:/project/tfstate:rw \
+                    -v /nfs/ansible/inventory:/project/ansible/inventory \
+                    -v /nfs/ansible/krb5.conf:/etc/krb5.conf \
+                    -e VAULT_ADDR=${VAULT_ADDR} -e VAULT_TOKEN=${VAULT_TOKEN} \
+                    --dns 192.168.50.71 --dns 192.168.50.72 --dns-search eden.local \
+                    '
+                }
+            }
+            steps {
+                dir('ansible/inventory'){
+                    sh "cp /project/ansible/inventory/homelab.vmware.yml ."
+                }
+                dir('terraform/dev/windows/ca'){
+                    sh "terragrunt validate"
+                    sh "terragrunt apply -auto-approve"
+                }
+            }
+        }
+        stage('Deploy Services') {
+            agent {
+                dockerfile {
+                    label 'docker'
+                    //filename 'cytopia.dockerfile'
+                    args '--cap-add=IPC_LOCK \
+                    -v /nfs/terraform/state:/project/tfstate:rw \
+                    -v /nfs/ansible/inventory:/project/ansible/inventory \
+                    -v /nfs/ansible/krb5.conf:/etc/krb5.conf \
+                    -e VAULT_ADDR=${VAULT_ADDR} -e VAULT_TOKEN=${VAULT_TOKEN} \
+                    --dns 192.168.50.71 --dns 192.168.50.72 --dns-search eden.local \
+                    '
+                }
+            }
+            steps {
+                dir('ansible/inventory'){
+                    sh "cp /project/ansible/inventory/homelab.vmware.yml ."
+                }
+                dir('terraform/dev/windows/paw'){
                     sh "terragrunt validate"
                     sh "terragrunt apply -auto-approve"
                 }

@@ -1,10 +1,10 @@
 ---
 - name: Copy Sub CA certificate
   win_copy:
-    src: "/tmp/{{  sub_ca_crt_name  }}.crt"
-    dest: 'C:\Windows\System32\CertSrv\CertEnroll\{{  sub_ca_crt_name  }}.crt'
+    src: "/tmp/{{  sub_hostname  }}_{{  domain  }} Issuing CA.crt"
+    dest: 'C:\Windows\System32\CertSrv\CertEnroll\{{  sub_hostname  }}_{{  domain  }} Issuing CA.crt'
 - name: Register Sub CA Certificate
-  win_shell: 'certutil.exe -installCert "C:\Windows\System32\CertSrv\CertEnroll\{{  sub_ca_crt_name  }}.crt"'
+  win_shell: 'certutil.exe -installCert "C:\Windows\System32\CertSrv\CertEnroll\{{  sub_hostname  }}_{{  domain  }} Issuing CA.crt"'
 - name: Configure Sub CA settings
   win_dsc:
     resource_name: AdcsCertificationAuthoritySettings
