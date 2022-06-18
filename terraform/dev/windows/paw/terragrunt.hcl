@@ -52,6 +52,6 @@ inputs = {
   # PAW vars
   ipv4_address     = "192.168.50.101"
   dns_server_list  = ["192.168.50.71", "192.168.50.72"]
-  ansible_playbook = "windows-setup-paw.yml"
+  ansible_playbook = "windows-setup-paw-w10.yml"
   name             = "EDEN-PAW-01"
 }

@@ -21,6 +21,6 @@ dependency "vsphere_base" {
 }
 inputs = {
   vsphere_win2019_template_name = "win-2019-datacenter-core-template"
-  vsphere_win10_template_name   = "win-2019-datacenter-gui-template"
+  vsphere_win10_template_name   = "win-11-ent-template"
   dc_id                         = dependency.vsphere_base.outputs.dc_id
 }
